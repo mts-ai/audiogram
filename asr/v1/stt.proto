@@ -1,0 +1,192 @@
+syntax = "proto3";
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/empty.proto";
+
+package mts.ai.audiogram.stt.v2;
+
+// ==== [begin] Voice Activity [begin] ====
+// VADMark определяет разметку голосовой активности во входном акустическом сигнале.
+// Сообщение включает в себя метку времени и тип метки.
+message VoiceActivityMark {
+  enum VoiceActivityMarkType {
+    VA_MARK_NONE = 0;
+    VA_MARK_BEGIN = 1;
+    VA_MARK_END = 2;
+  }
+
+  VoiceActivityMarkType mark_type = 1; // тип разметки
+  uint64 offset_ms = 2; // метка времени с точкой отсчета начала входного акустического сигнала, единицы измерения: миллисекунды
+}
+
+enum VoiceActivityDetectionAlgorithmUsage {
+  USE_VAD = 0; // включает использование VAD-алгоритма для разбиения на фразы (VAD - Voice Activity Detection)
+  DO_NOT_PERFORM_VOICE_ACTIVITY = 1; // отключает разбиение на фразы по Voice Activity. То есть весь распознанный текст будет получен в виде одной фразы.
+  USE_DEP = 2; // включает использование DEP-алгоритма для разбиения на фразы
+}
+
+enum VoiceActivityMarkEventsMode {
+  // Режим отправки VoiceActivity разметки клиенту
+  VA_DISABLE = 0; // отключить отправку отметок VoiceActivityMark.
+  VA_ENABLE = 1; // включить отправку отметок VoiceActivityMark синхронно вместе с транскрипцией
+  VA_ENABLE_ASYNC = 2; /* включить отправку отметок VoiceActivityMark асинхронно
+                        ( как только будет получена разметка не дожидаясь работы asr). Для файлового режима работает идентично ENABLE*/
+}
+
+message VADOptions {
+  enum VoiceActivityDetectionMode {
+    // Выбор типа разметки VAD-ом аудио
+    VAD_MODE_DEFAULT = 0; // Значение по умолчанию для файлового режима - ONLY_SPEECH, для стримового режима - SPLIT_BY_PAUSES
+    SPLIT_BY_PAUSES = 1; // аудио разделяется по паузам (ничего не вырезается)
+    ONLY_SPEECH = 2; // вырезаются только сегменты с речью
+  }
+  float threshold = 1; /* Порог срабатывания VAD. Если вероятность речи выше порога,
+   значит обработанный чанк содержит речь. Возможные значения: (0, 1.0]. Значение по умолчанию - 0.2 */
+  int32 speech_pad_ms = 2; /* Отступ, добавляемый к границам найденных фрагментов (если speech_pad_ms < 0, отступ будет "внутрь" фрагмента).
+  Единицы измерения - миллисекунды. Значение по умолчанию - 300 */
+  uint32 min_silence_ms = 3; /* Если между двумя фрагментами речи встречается пауза короче min_silence_ms,
+  то такая пауза не учитывается и фрагменты объединяются в один.
+  Единицы измерения - миллисекунды. Возможные значения: min_silence_ms >= 0. Значение по умолчанию - 500*/
+  uint32 min_speech_ms = 4; /* Минимальная продолжительность речи. Фрагменты короче min_speech_ms не учитываются. Единицы измерения - миллисекунды.
+  Возможные значения: min_speech_ms >= 0. Значение по умолчанию - 250*/
+  VoiceActivityDetectionMode mode = 5; //* Выбор типа разметки VAD-ом аудио файла для файлового запроса. */
+}
+
+message DEPOptions {
+  float smoothed_window_threshold = 1; /* Порог срабатывания алгоритма DEP. На заданном окне сглаживания считается среднее значение верояности завершения фразы. Если это значение больше порога то алгоритм срабатывает.
+  Возможные значения: (0, 1.0). Значение по умолчанию - 0.754 */
+  int32 smoothed_window_ms = 2; /* Окно, на котором происходит сглаживание при принятии решения о конце фразы.
+  Единицы измерения - миллисекунды. Возможные значения: smoothed_window_ms >= 10.
+  Значение по умолчанию - 970 мс. Значение должно быть кратно 10 мс */
+}
+
+message VoiceActivityConfig {
+  VoiceActivityDetectionAlgorithmUsage usage = 1; /* выбор алгоритма VoiceActivity. При DO_NOT_PERFORM_VOICE_ACTIVITY разметка аудио выключена.
+  Значение по умолчанию - USE_VAD */
+  oneof algo_options {
+    VADOptions vad_options = 2; // опции алгоритма VAD. Используется при VoiceActivityDetectionAlgorithmUsage = USE_VAD
+    DEPOptions dep_options = 3; // опции алгоритма DEP. Используется при VoiceActivityDetectionAlgorithmUsage = USE_DEP
+  }
+}
+// ==== [end] Voice Activity [end] ====
+
+enum AudioEncoding {
+  ENCODING_UNSPECIFIED = 0;
+  LINEAR_PCM = 1;
+  FLAC = 2;
+  MULAW = 3;
+  ALAW = 20;
+}
+
+message RecognitionConfig {
+  AudioEncoding encoding = 1;
+  int32 sample_rate_hertz = 2;
+  string language_code = 3;
+  int32 max_alternatives = 4;
+  int32 audio_channel_count = 7;
+  bool enable_word_time_offsets = 8;
+  bool enable_automatic_punctuation = 11;
+  string model = 13;
+  VoiceActivityConfig va_config = 14; // Конфигурация Voice Activity
+  VoiceActivityMarkEventsMode va_response_mode = 15;  // режим отправки разметки клиенту. default - VA_DISABLE
+  bool enable_genderage = 16;
+}
+
+message StreamingRecognitionConfig {
+  reserved 4;
+  RecognitionConfig config = 1;
+  bool single_utterance = 2;
+  bool interim_results = 3;
+}
+
+message StreamingRecognizeRequest {
+  oneof streaming_request {
+    StreamingRecognitionConfig streaming_config = 1;
+    bytes audio = 2;
+  }
+}
+
+message RecognitionAudio {
+  oneof audio_source {
+    bytes audio = 1;
+    string uri = 2; // not supported
+  }
+}
+
+message RecognizeRequest {
+  RecognitionConfig config = 1;
+  RecognitionAudio audio_content = 2;
+}
+
+message LongRunningRecognizeRequest {
+  RecognitionConfig config = 1;
+  RecognitionAudio audio_content = 2;
+}
+
+message RecognizeResponse {
+  repeated SpeechRecognitionResult results = 1;
+}
+
+message StreamingRecognizeResponse {
+  repeated StreamingRecognitionResult results = 1;
+}
+
+message SpeakerGenderAgePrediction {
+  enum GenderClass {
+    GENDER_UNDEF = 0;
+    GENDER_MALE = 1;
+    GENDER_FEMALE = 2;
+  }
+
+  enum AgeClass {
+    AGE_UNDEF = 0;
+    AGE_ADULT = 1;
+    AGE_CHILD = 2;
+  }
+
+  GenderClass gender = 1; // пол спикера
+  AgeClass age = 2; // возраст спикера
+}
+
+message SpeechRecognitionAlternative {
+  message WordInfo {
+    google.protobuf.Duration start_time = 1;
+    google.protobuf.Duration end_time = 2;
+    string word = 3;
+    float confidence = 4;
+  }
+  string transcript = 1;
+  float confidence = 2;
+  repeated WordInfo words = 3;
+  google.protobuf.Duration start_time = 4;
+  google.protobuf.Duration end_time = 5;
+}
+
+message StreamingRecognitionResult {
+  SpeechRecognitionResult result = 1;
+  bool is_final = 2;
+}
+
+message SpeechRecognitionResult {
+  repeated SpeechRecognitionAlternative alternatives = 1;
+  int32 channel = 2;
+  repeated VoiceActivityMark va_marks = 3; /* Voice Activity разметка. Массив меток отправляется только если VoiceActivityMarkEventsMode = VA_ENABLE / VA_ENABLE_ASYNC
+  Отметим, что при VoiceActivityMarkEventsMode = VA_ENABLE_ASYNC все остальные поля структуры SpeechRecognitionResult могут быть пустые */
+  SpeakerGenderAgePrediction genderage = 4; // Результат работы модели классификации мужчина/женщина/ребенок. Включается флагом enable_genderage в RecognitionConfig
+}
+
+message ModelsInfo {
+  repeated ModelInfo models = 1;
+}
+
+message ModelInfo {
+  string name = 1;
+  uint32 sample_rate_hertz = 2;
+  string language_code = 3;
+}
+
+service STT {
+  rpc Recognize(RecognizeRequest) returns (RecognizeResponse);
+  rpc StreamingRecognize (stream StreamingRecognizeRequest) returns (stream StreamingRecognizeResponse);
+  rpc GetModelsInfo(google.protobuf.Empty) returns (ModelsInfo);
+}
