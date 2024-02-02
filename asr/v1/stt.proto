@@ -90,6 +90,7 @@ message RecognitionConfig {
   VoiceActivityConfig va_config = 14; // Конфигурация Voice Activity
   VoiceActivityMarkEventsMode va_response_mode = 15;  // режим отправки разметки клиенту. default - VA_DISABLE
   bool enable_genderage = 16;
+  bool split_by_channel = 17;
 }
 
 message StreamingRecognitionConfig {
