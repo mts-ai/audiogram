@@ -78,6 +78,21 @@ enum AudioEncoding {
   ALAW = 20;
 }
 
+enum AttackType {
+  LOGICAL = 0;
+  PHYSICAL = 1;
+  ALL_TYPES = 2;
+}
+
+message AntiSpoofingConfig {
+  AttackType type = 1;
+  oneof false_rate_type {
+    float FAR = 2; // Допустимый процент принятия ботов за людей
+    float FRR = 3; // Допустимый процент отклонения людей (принятия их за ботов)
+  }
+  uint32 max_duration_for_analysis_ms = 4;
+}
+
 message RecognitionConfig {
   AudioEncoding encoding = 1;
   int32 sample_rate_hertz = 2;
@@ -91,6 +106,8 @@ message RecognitionConfig {
   VoiceActivityMarkEventsMode va_response_mode = 15;  // режим отправки разметки клиенту. default - VA_DISABLE
   bool enable_genderage = 16;
   bool split_by_channel = 17;
+  bool enable_antispoofing = 19;
+  AntiSpoofingConfig antispoofing_config = 20;
 }
 
 message StreamingRecognitionConfig {
@@ -132,6 +149,13 @@ message StreamingRecognizeResponse {
   repeated StreamingRecognitionResult results = 1;
 }
 
+message EmotionsRecognition {
+  float positive = 1;
+  float neutral = 2;
+  float negative_angry = 3;
+  float negative_sad = 4;
+}
+
 message SpeakerGenderAgePrediction {
   enum GenderClass {
     GENDER_UNDEF = 0;
@@ -147,6 +171,19 @@ message SpeakerGenderAgePrediction {
 
   GenderClass gender = 1; // пол спикера
   AgeClass age = 2; // возраст спикера
+  EmotionsRecognition emotion = 3; //эмоция спикера
+}
+
+message SpoofingResult {
+  enum AttackResult {
+    ATTACK_DETECTED = 0;
+    GENUINE = 1;
+  }
+  AttackType type = 1;
+  AttackResult result = 2;
+  float confidence = 3;
+  uint64 start_time_ms = 4;
+  uint64 end_time_ms = 5;
 }
 
 message SpeechRecognitionAlternative {
@@ -174,6 +211,7 @@ message SpeechRecognitionResult {
   repeated VoiceActivityMark va_marks = 3; /* Voice Activity разметка. Массив меток отправляется только если VoiceActivityMarkEventsMode = VA_ENABLE / VA_ENABLE_ASYNC
   Отметим, что при VoiceActivityMarkEventsMode = VA_ENABLE_ASYNC все остальные поля структуры SpeechRecognitionResult могут быть пустые */
   SpeakerGenderAgePrediction genderage = 4; // Результат работы модели классификации мужчина/женщина/ребенок. Включается флагом enable_genderage в RecognitionConfig
+  repeated SpoofingResult spoofing_result = 5; // Результат работы Anti-Spoofing модели -
 }
 
 message ModelsInfo {
