@@ -735,29 +735,35 @@ external_trace_id: <id>
 
 # Примеры кода клиентских приложений Audiogram
 
-Для работы с Audiogram необходимо создать клиентское приложение. В этом разделе можно посмотреть примеры кода клиентских приложений, написанных на Python. Однако, вы можете использовать и другие языки программирования, для которых существуют библиотеки gRPC.
+Для работы с Audiogram необходимо создать клиентское приложение. Примеры кода клиентских приложений [собраны в этом разделе](https://github.com/mts-ai/audiogram/tree/main/demo_clients). Их можно использовать в качестве образцов при написании сервисов, использующих Audiogram.
 
-При написании клиентских приложений используйте proto-файлы.
+Архив содержит следующие примеры кода:
 
-## Распознавание аудио в файловом режиме
+**Распознавание речи**:
 
-**Внимание!** Этот пример создавался [для предыдущей версии stt.proto файла](https://github.com/mts-ai/audiogram/blob/main/asr/v2/stt.proto). Обновленный пример для [stt_v3.proto](https://github.com/mts-ai/audiogram/blob/main/asr/v3/stt_v3.proto) находится в разработке.
+* клиент, выполняющий распознавание речи в файловом режиме
+* клиент, выполняющий распознавание речи в потоковом режиме
+* клиент, получающий список доступных моделей для распознавания речи
 
-[Посмотреть пример...](https://github.com/mts-ai/audiogram/blob/main/asr/v2/python3/recognize_file.py)
+**Синтез речи**:
 
-## Распознавание аудио в потоковом режиме
+* клиент, выполняющий синтез речи в файловом режиме
+* клиент, выполняющий синтез речи в потоковом режиме
+* клиент, получающий список доступных моделей для синтеза речи
 
-**Внимание!** Этот пример создавался [для предыдущей версии stt.proto файла](https://github.com/mts-ai/audiogram/blob/main/asr/v2/stt.proto). Обновленный пример для [stt_v3.proto](https://github.com/mts-ai/audiogram/blob/main/asr/v3/stt_v3.proto) находится в разработке.
+**Работа с аудиоархивом**:
 
-[Посмотреть пример...](https://github.com/mts-ai/audiogram/blob/main/asr/v2/python3/recognize_stream.py)
+* клиент, получающий список запросов на распознавание речи
+* клиент, позволяющий скачать аудио, полученное на распознавание речи
+* клиент, позволяющий скачать разметку голосовой активности
+* клиент, позволяющий скачать результат распознавания речи
 
-## Синтез аудио в файловом режиме
+**Внимание!** Примеры из архива, перечисленные выше, создавались для [stt_v3.proto](https://github.com/mts-ai/audiogram/blob/main/asr/v3/stt_v3.proto) и [tts_v2.proto](https://github.com/mts-ai/audiogram/blob/main/tts/v2/tts.proto)
 
-[Посмотреть пример...](https://github.com/mts-ai/audiogram/blob/main/tts/v2/python3/synthesize_file.py)
+В качестве образца кода клиентских приложений для [предыдущей версии stt.proto файла](https://github.com/mts-ai/audiogram/blob/main/asr/v2/stt.proto) используйте следующие примеры:
 
-## Синтез аудио в потоковом режиме
-
-[Посмотреть пример...](https://github.com/mts-ai/audiogram/blob/main/tts/v2/python3/synthesize_stream.py)
+* [распознавание речи в файловом режиме](https://github.com/mts-ai/audiogram/blob/main/asr/v2/python3/recognize_file.py)
+* [распознавание речи в потоковом режиме](https://github.com/mts-ai/audiogram/blob/main/asr/v2/python3/recognize_stream.py)
 
 # История релизов Audiogram
 
