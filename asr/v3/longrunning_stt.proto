@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "stt_v3.proto";
+
+package mts.ai.audiogram.long_running.v1;
+
+message Task {
+  enum Status {
+    UNDEFINED = 0;
+    NEW = 1;
+    IN_PROGRESS = 2;
+    COMPLETE = 3;
+    CANCELED = 4;
+    ERROR = 5;
+  }
+  string id = 1;
+  Status status = 2;
+  google.protobuf.Timestamp created_at = 3;
+  repeated Audio audio_requests = 4;
+}
+
+message Audio{
+  string bucket_name = 1;
+  string object_name = 2;
+  string status = 3;
+  string response_id = 4;
+}
+
+message TaskRequest{
+  string task_id = 1;
+}
+
+message LongRunningRecognizeRequest {
+  message AudioPath {
+    string bucket_name = 1;
+    string object_name = 2;
+  }
+  mts.ai.audiogram.stt.v3.RecognitionConfig config = 1;
+  repeated AudioPath s3_audio_path = 2;
+}
+
+service LongRunning {
+  rpc LongRunningRecognize(LongRunningRecognizeRequest) returns (Task);
+  rpc GetTaskInfo(TaskRequest) returns (Task);
+  rpc CancelTask(TaskRequest) returns (Task);
+}
