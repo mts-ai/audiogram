@@ -100,8 +100,8 @@ enum AttackType {
 message AntiSpoofingConfig {
   AttackType type = 1;
   oneof false_rate_type {
-    float FAR = 2; // Допустимый процент принятия ботов за людей
-    float FRR = 3; // Допустимый процент отклонения людей (принятия их за ботов)
+    float FAR = 2;
+    float FRR = 3;
   }
   uint32 max_duration_for_analysis_ms = 4;
   bool enable = 5;
@@ -152,7 +152,7 @@ message SpeechRecognitionHypothesis {
     float confidence = 4;
   }
   string transcript = 1;
-  string normalized_transcript = 2; //all postprocessing
+  string normalized_transcript = 2;
   float confidence = 3;
   uint32 start_time_ms = 4;
   uint32 end_time_ms = 5;
@@ -191,9 +191,9 @@ message SpeakerGenderAgePrediction {
     AGE_CHILD = 2;
   }
 
-  GenderClass gender = 1; // пол спикера
-  AgeClass age = 2; // возраст спикера
-  EmotionsRecognition emotion = 3; //эмоция спикера
+  GenderClass gender = 1;
+  AgeClass age = 2;
+  EmotionsRecognition emotion = 3;
 }
 
 message SpoofingResult {
@@ -229,6 +229,5 @@ message ModelInfo {
 service STT {
   rpc FileRecognize(FileRecognizeRequest) returns (FileRecognizeResponse);
   rpc Recognize (stream RecognizeRequest) returns (stream RecognizeResponse);
-//rpc LongRunningRecognize(LongRunningRecognizeRequest) returns (mts.ai.audiogram.v1.Task);
   rpc GetModelsInfo(google.protobuf.Empty) returns (ModelsInfo);
 }

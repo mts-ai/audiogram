@@ -13,90 +13,57 @@ enum AudioEncoding {
 }
 
 enum VoiceStyle {
-    VOICE_STYLE_NEUTRAL = 0; /* спокойное состояние*/
-    VOICE_STYLE_HAPPY = 1; /* радость */
-    VOICE_STYLE_ANGRY = 2; /* злость */
-    VOICE_STYLE_SAD = 3; /* грусть */
-    VOICE_STYLE_SURPRISED = 4; /* удивление */
+    VOICE_STYLE_NEUTRAL = 0;
+    VOICE_STYLE_HAPPY = 1;
+    VOICE_STYLE_ANGRY = 2;
+    VOICE_STYLE_SAD = 3;
+    VOICE_STYLE_SURPRISED = 4;
 }
 
 message SynthesizeOptions {
     message CustomSynthesizeOptionValue {
         oneof kind {
 
-            /* Represents a int32 value. */
             int32 int32_value = 1;
 
-            /*  Represents a int64 value. */
             int64 int64_value = 2;
 
-            /*  Represents a double value. */
             double number_value = 3;
 
-            /*  Represents a string value. */
             string string_value = 4;
 
-            /*  Represents a boolean value. */
             bool bool_value = 5;
         }
     }
 
     enum PostprocessingMode {
-        /*
-        Постобработка выключена.
-        */
+        
         POST_PROCESSING_DISABLE = 0;
 
-        /*
-        Рекомендуется использовать для телефонного канала.
-        Допускается использовать только с AudioOptions.sample_rate_hertz = 8000 Гц,
-        Наилучший результат дает в сочетании с SynthesizeOptions.model_sample_rate_hertz = 44100 Гц
-        */
         POST_PROCESSING_PHONE_CHANNEL = 1;
 
-        /*
-        Рекомендуется использовать для микрофонного канала
-        */
         POST_PROCESSING_PRETTIFY = 2;
     }
 
     reserved 1;
 
 
-    /*
-    Тип модели.
-    Список доступных типов моделей:
-    - light: рекомендуется для потокового синтеза
-    - high_quality: рекомендуется для файлового синтеза
-    */
     string model_type = 2;
-    /*
-     Частота дискредитации модели (в герцах).
-     Если поле не указано, то будет подобрана наиболее близкая модель к указанной частоте дискредитации аудио.
-     */
+    
     uint32 model_sample_rate_hertz = 3;
 
     reserved 4;
 
-    /*
-    Стиль речи
-    Значение по умолчанию: VOICE_STYLE_NEUTRAL.
-    */
+    
     VoiceStyle voice_style = 5;
 
     reserved 6;
 
-    /* Постобработка */
     PostprocessingMode postprocessing_mode = 7;
 
     reserved 8;
     reserved 9;
 
-    /*
-    Дополнительный набор опций по настройке синтеза.
-    В custom_options выносятся экспериментальные настройки, которые еще не прошли полную апробацию.
-    Список доступных опций определен в документации Audioram API соответствующего релиза.
-    */
     map<string, CustomSynthesizeOptionValue> custom_options = 11;
 }
 
