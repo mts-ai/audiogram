@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+import "stt_v3.proto";
+import "longrunning_task.proto";
+
+package mts.ai.audiogram.long_running.v1;
+
+message LongRunningRecognizeRequest {
+  message AudioPath {
+    string bucket_name = 1;
+    string object_name = 2;
+  }
+  mts.ai.audiogram.stt.v3.RecognitionConfig config = 1;
+  repeated AudioPath s3_audio_path = 2;
+}
+
+service LongRunning {
+  rpc LongRunningRecognize(LongRunningRecognizeRequest) returns (mts.ai.audiogram.longrunning_task.v1.Task);
+  rpc GetTaskInfo(mts.ai.audiogram.longrunning_task.v1.TaskRequest) returns (mts.ai.audiogram.longrunning_task.v1.Task);
+  rpc CancelTask(mts.ai.audiogram.longrunning_task.v1.TaskRequest) returns (mts.ai.audiogram.longrunning_task.v1.Task);
+}
+

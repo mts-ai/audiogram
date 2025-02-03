@@ -1,9 +1,12 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
-import "stt_v3.proto";
 
-package mts.ai.audiogram.long_running.v1;
+package mts.ai.audiogram.longrunning_task.v1;
+
+message ResponseHeader {
+    uint64 timestamp = 1;
+}
 
 message Task {
   enum Status {
@@ -18,6 +21,7 @@ message Task {
   Status status = 2;
   google.protobuf.Timestamp created_at = 3;
   repeated Audio audio_requests = 4;
+  ResponseHeader header = 5;
 }
 
 message Audio{
@@ -31,17 +35,3 @@ message TaskRequest{
   string task_id = 1;
 }
 
-message LongRunningRecognizeRequest {
-  message AudioPath {
-    string bucket_name = 1;
-    string object_name = 2;
-  }
-  mts.ai.audiogram.stt.v3.RecognitionConfig config = 1;
-  repeated AudioPath s3_audio_path = 2;
-}
-
-service LongRunning {
-  rpc LongRunningRecognize(LongRunningRecognizeRequest) returns (Task);
-  rpc GetTaskInfo(TaskRequest) returns (Task);
-  rpc CancelTask(TaskRequest) returns (Task);
-}

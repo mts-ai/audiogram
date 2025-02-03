@@ -13,48 +13,37 @@ enum AudioEncoding {
 }
 
 enum VoiceStyle {
-    VOICE_STYLE_NEUTRAL = 0;
-    VOICE_STYLE_HAPPY = 1;
-    VOICE_STYLE_ANGRY = 2;
-    VOICE_STYLE_SAD = 3;
-    VOICE_STYLE_SURPRISED = 4;
+    VOICE_STYLE_NEUTRAL = 0; 
+    VOICE_STYLE_HAPPY = 1; 
+    VOICE_STYLE_ANGRY = 2; 
+    VOICE_STYLE_SAD = 3; 
+    VOICE_STYLE_SURPRISED = 4; 
 }
 
 message SynthesizeOptions {
     message CustomSynthesizeOptionValue {
         oneof kind {
-
             int32 int32_value = 1;
-
             int64 int64_value = 2;
-
             double number_value = 3;
-
             string string_value = 4;
-
             bool bool_value = 5;
         }
     }
 
     enum PostprocessingMode {
-        
         POST_PROCESSING_DISABLE = 0;
-
         POST_PROCESSING_PHONE_CHANNEL = 1;
-
         POST_PROCESSING_PRETTIFY = 2;
     }
 
     reserved 1;
 
-
     string model_type = 2;
-    
     uint32 model_sample_rate_hertz = 3;
 
     reserved 4;
 
-    
     VoiceStyle voice_style = 5;
 
     reserved 6;
@@ -79,16 +68,23 @@ message SynthesizeSpeechRequest {
     SynthesizeOptions synthesize_options = 7;
 }
 
+message ResponseHeader {
+    uint64 timestamp = 1;
+}
+
 message StreamingSynthesizeSpeechResponse {
     bytes audio = 1;
+    ResponseHeader header = 2;
 }
 
 message SynthesizeSpeechResponse {
     bytes audio = 1;
+    ResponseHeader header = 2;
 }
 
 message ModelsInfo {
     repeated ModelInfo models = 1;
+    ResponseHeader header = 2;
 }
 
 message ModelInfo {

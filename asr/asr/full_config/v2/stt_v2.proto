@@ -5,7 +5,6 @@ import "google/protobuf/empty.proto";
 
 package mts.ai.audiogram.stt.v2;
 
-// ==== [begin] Voice Activity [begin] ====
 message VoiceActivityMark {
   enum VoiceActivityMarkType {
     VA_MARK_NONE = 0;
@@ -54,7 +53,6 @@ message VoiceActivityConfig {
     DEPOptions dep_options = 3;
   }
 }
-// ==== [end] Voice Activity [end] ====
 
 enum AudioEncoding {
   ENCODING_UNSPECIFIED = 0;
@@ -64,14 +62,8 @@ enum AudioEncoding {
   ALAW = 20;
 }
 
-enum AttackType {
-  LOGICAL = 0;
-  PHYSICAL = 1;
-  ALL_TYPES = 2;
-}
-
 message AntiSpoofingConfig {
-  AttackType type = 1;
+  reserved 1;
   oneof false_rate_type {
     float FAR = 2;
     float FRR = 3;
@@ -165,7 +157,7 @@ message SpoofingResult {
     ATTACK_DETECTED = 0;
     GENUINE = 1;
   }
-  AttackType type = 1;
+  reserved 1;
   AttackResult result = 2;
   float confidence = 3;
   uint64 start_time_ms = 4;
@@ -214,3 +206,4 @@ service STT {
   rpc StreamingRecognize (stream StreamingRecognizeRequest) returns (stream StreamingRecognizeResponse);
   rpc GetModelsInfo(google.protobuf.Empty) returns (ModelsInfo);
 }
+

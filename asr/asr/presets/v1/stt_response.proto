@@ -1,0 +1,91 @@
+syntax = "proto3";
+ 
+package mts.ai.audiogram.stt_response.v1;
+
+message ResponseHeader {
+    uint64 timestamp = 1;
+}
+
+message FileRecognizeResponse{
+  repeated RecognizeResponse response = 1;
+  ResponseHeader header = 2;
+}
+ 
+message RecognizeResponse {
+  SpeechRecognitionHypothesis hypothesis = 1;
+  bool is_final = 2;
+  int32 channel = 3;
+  repeated VoiceActivityMark va_marks = 4;
+  SpeakerGenderAgePrediction genderage = 5;
+  repeated SpoofingResult spoofing_result = 6;
+  SpeakerInfo speaker_info = 7;
+  ResponseHeader header = 8;
+}
+ 
+message SpeechRecognitionHypothesis {
+  message WordInfo {
+    uint32 start_time_ms = 1;
+    uint32 end_time_ms = 2;
+    string word = 3;
+    float confidence = 4;
+  }
+  string transcript = 1;
+  string normalized_transcript = 2;
+  float confidence = 3;
+  uint32 start_time_ms = 4;
+  uint32 end_time_ms = 5;
+  repeated WordInfo words = 6;
+  repeated WordInfo normalized_words = 7;
+}
+ 
+message VoiceActivityMark {
+  enum VoiceActivityMarkType {
+    VA_MARK_NONE = 0;
+    VA_MARK_BEGIN = 1;
+    VA_MARK_END = 2;
+  }
+ 
+  VoiceActivityMarkType mark_type = 1;
+  uint32 offset_ms = 2;
+}
+ 
+message SpeakerGenderAgePrediction {
+  message EmotionsRecognition {
+    float positive = 1;
+    float neutral = 2;
+    float negative_angry = 3;
+    float negative_sad = 4;
+  }
+ 
+  enum GenderClass {
+    GENDER_UNDEF = 0;
+    GENDER_MALE = 1;
+    GENDER_FEMALE = 2;
+  }
+ 
+  enum AgeClass {
+    AGE_UNDEF = 0;
+    AGE_ADULT = 1;
+    AGE_CHILD = 2;
+  }
+ 
+  GenderClass gender = 1;
+  AgeClass age = 2;
+  EmotionsRecognition emotion = 3;
+}
+
+message SpoofingResult {
+  enum AttackResult {
+    ATTACK_DETECTED = 0;
+    GENUINE = 1;
+  }
+  reserved 1;
+  AttackResult result = 2;
+  float confidence = 3;
+  uint32 start_time_ms = 4;
+  uint32 end_time_ms = 5;
+}
+ 
+message SpeakerInfo{
+  uint32 speaker_id = 1;
+}

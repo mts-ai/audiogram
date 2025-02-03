@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package mts.ai.audiogram.tts_presets.v1;
+
+message Preset{
+  string preset_name = 1;
+  string preset_version = 2;
+}
+
+message SynthesizeSpeechRequest {
+    oneof input_source {
+        string text = 1;
+        string ssml = 2;
+    }
+    Preset preset = 3;
+}
+
+message ResponseHeader {
+    uint64 timestamp = 1;
+}
+
+message StreamingSynthesizeSpeechResponse {
+    bytes audio = 1;
+    ResponseHeader header = 2;
+}
+
+message SynthesizeSpeechResponse {
+    bytes audio = 1;
+    ResponseHeader header = 2;
+}
+
+service TTS {
+    rpc StreamingSynthesize (SynthesizeSpeechRequest) returns (stream StreamingSynthesizeSpeechResponse);
+    rpc Synthesize (SynthesizeSpeechRequest) returns (SynthesizeSpeechResponse);
+}
