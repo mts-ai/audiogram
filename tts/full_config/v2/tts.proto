@@ -3,6 +3,7 @@ syntax = "proto3";
 package mts.ai.audiogram.tts.v2;
 
 import "google/protobuf/empty.proto";
+import "response_header.proto";
 
 enum AudioEncoding {
     ENCODING_UNSPECIFIED = 0;
@@ -13,11 +14,12 @@ enum AudioEncoding {
 }
 
 enum VoiceStyle {
-    VOICE_STYLE_NEUTRAL = 0; 
-    VOICE_STYLE_HAPPY = 1; 
-    VOICE_STYLE_ANGRY = 2; 
-    VOICE_STYLE_SAD = 3; 
-    VOICE_STYLE_SURPRISED = 4; 
+    VOICE_STYLE_NEUTRAL = 0;
+    VOICE_STYLE_HAPPY = 1;
+    VOICE_STYLE_ANGRY = 2;
+    VOICE_STYLE_SAD = 3;
+    VOICE_STYLE_SURPRISED = 4;
+    VOICE_STYLE_CONVERSATIONAL = 5;
 }
 
 message SynthesizeOptions {
@@ -68,23 +70,19 @@ message SynthesizeSpeechRequest {
     SynthesizeOptions synthesize_options = 7;
 }
 
-message ResponseHeader {
-    uint64 timestamp = 1;
-}
-
 message StreamingSynthesizeSpeechResponse {
     bytes audio = 1;
-    ResponseHeader header = 2;
+    mts.ai.audiogram.response_header.v1.ResponseHeader header = 2;
 }
 
 message SynthesizeSpeechResponse {
     bytes audio = 1;
-    ResponseHeader header = 2;
+    mts.ai.audiogram.response_header.v1.ResponseHeader header = 2;
 }
 
 message ModelsInfo {
     repeated ModelInfo models = 1;
-    ResponseHeader header = 2;
+    mts.ai.audiogram.response_header.v1.ResponseHeader header = 2;
 }
 
 message ModelInfo {

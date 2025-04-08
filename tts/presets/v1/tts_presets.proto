@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "response_header.proto";
+
 package mts.ai.audiogram.tts_presets.v1;
 
 message Preset{
@@ -15,18 +17,14 @@ message SynthesizeSpeechRequest {
     Preset preset = 3;
 }
 
-message ResponseHeader {
-    uint64 timestamp = 1;
-}
-
 message StreamingSynthesizeSpeechResponse {
     bytes audio = 1;
-    ResponseHeader header = 2;
+    mts.ai.audiogram.response_header.v1.ResponseHeader header = 2;
 }
 
 message SynthesizeSpeechResponse {
     bytes audio = 1;
-    ResponseHeader header = 2;
+    mts.ai.audiogram.response_header.v1.ResponseHeader header = 2;
 }
 
 service TTS {

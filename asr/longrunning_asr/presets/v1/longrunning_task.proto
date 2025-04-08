@@ -1,12 +1,9 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "response_header.proto";
 
 package mts.ai.audiogram.longrunning_task.v1;
-
-message ResponseHeader {
-    uint64 timestamp = 1;
-}
 
 message Task {
   enum Status {
@@ -21,7 +18,7 @@ message Task {
   Status status = 2;
   google.protobuf.Timestamp created_at = 3;
   repeated Audio audio_requests = 4;
-  ResponseHeader header = 5;
+  mts.ai.audiogram.response_header.v1.ResponseHeader header = 5;
 }
 
 message Audio{

@@ -127,18 +127,12 @@
 
 ##### Сообщения PROTOBUF
 
-###### ResponseHeader
-
-| Поле | Тип | Описание |
-| :--- | :--- | :--- |
-| timestamp | uint64 | Время отправки ответа на стороне Audiogram. Позволяет высчитать сетевую задержку. |
-
 ###### FileRecognizeResponse
 
 | Поле | Тип | Описание |
 | :--- | :--- | :--- |
 | response | repeated RecognizeResponse | Результат распознавания. |
-| header | ResponseHeader | Сообщение типа ResponseHeader. |
+| header | mts.ai.audiogram.response_header.v1.ResponseHeader | Сообщение типа ResponseHeader. |
 
 ###### RecognizeResponse
 
@@ -153,7 +147,7 @@
 | genderage | SpeakerGenderAgePrediction | Результат работы модели классификации мужчина/женщина/ребенок. Включается флагом enable в GenderAgeEmotionConfig. |
 | spoofing_result | repeated SpoofingResult | Результат работы модели антиспуфинга. Включается флагом enable в AntiSpoofingConfig. |
 | speaker_info | SpeakerInfo | Информация по спикеру, которому принадлежат распознанные фразы. |
-| header | ResponseHeader | Сообщение типа ResponseHeader. |
+| header | mts.ai.audiogram.response_header.v1.ResponseHeader | Сообщение типа ResponseHeader. |
 
 ###### SpeechRecognitionHypothesis
 
@@ -513,7 +507,7 @@
 | Поле | Тип | Описание |
 | :--- | :--- | :--- |
 | models | repeated ModelInfo | Список доступных моделей. |
-| header | mts.ai.audiogram.stt_response.v1.ResponseHeader | Сообщение типа ResponseHeader. |
+| header | mts.ai.audiogram.response_header.v1.ResponseHeader | Сообщение типа ResponseHeader. |
 
 ###### ModelInfo
 
@@ -606,12 +600,6 @@ Audiogram сохраняет результат распознавания в s3
 
 ##### Сообщения PROTOBUF
 
-###### ResponseHeader
-
-| Поле | Тип | Описание |
-| :--- | :--- | :--- |
-| timestamp | uint64 | Время отправки ответа на стороне Audiogram. Позволяет высчитать сетевую задержку. |
-
 ###### Task
 
 Эта структура содержит информацию о поставленной задаче на асинхронное распознавание речи.
@@ -622,7 +610,7 @@ Audiogram сохраняет результат распознавания в s3
 | status | Status | Статус задачи. |
 | created_at | google.protobuf.Timestamp | Время создания задачи. |
 | audio_requests | repeated Audio | Информация об аудиофайлах, которые будут распознаны в рамках задачи. |
-| header | ResponseHeader | Сообщение типа ResponseHeader. |
+| header | mts.ai.audiogram.response_header.v1.ResponseHeader | Сообщение типа ResponseHeader. |
 
 ###### Status
 
@@ -776,12 +764,6 @@ Audiogram сохраняет результат распознавания в s3
 | ssml | string | Текст для синтеза в формате SSML<br> (необходимо задавать только одно из полей – text или ssml).<br> Если в поле ssml отправить на озвучку текст без SSML-разметки, вернется ошибка синтеза. |
 | preset | Preset | Сообщение типа Preset (описано выше). |
 
-###### ResponseHeader
-
-| Поле | Тип | Описание |
-| :----- | :----- | :----- |
-| timestamp | uint64 | Время отправки ответа на стороне Audiogram. Позволяет высчитать сетевую задержку. |
-
 ###### StreamingSynthesizeSpeechResponse
 
 Результат работы потокового синтеза речи.
@@ -789,7 +771,7 @@ Audiogram сохраняет результат распознавания в s3
 | Поле              | Тип                        | Описание                       |
 | :------------     |:---------                  | :------------------------------|
 | audio  | bytes | Байты аудиоданных без заголовка, закодированные, как указано в encoding и заданной в sample_rate_hertz частотой дискретизации.<br> Результат синтеза может прийти в нескольких ответах, по мере их синтезирования.      |
-| header  | ResponseHeader | Сообщение типа ResponseHeader. |
+| header  | mts.ai.audiogram.response_header.v1.ResponseHeader | Сообщение типа ResponseHeader. |
 
 ###### SynthesizeSpeechResponse
 
@@ -798,7 +780,7 @@ Audiogram сохраняет результат распознавания в s3
 | Поле              | Тип                        | Описание                       |
 | :------------     |:---------                  | :------------------------------|
 | audio  | bytes | В данном поле передаётся целый синтезированный аудиофайл с заголовками в формате, заданном в encoding и заданной в sample_rate_hertz частотой дискретизации.      |
-| header  | ResponseHeader | Сообщение типа ResponseHeader. |
+| header  | mts.ai.audiogram.response_header.v1.ResponseHeader | Сообщение типа ResponseHeader. |
 
 ### Через полную конфигурацию запроса
 
@@ -852,13 +834,14 @@ Audiogram сохраняет результат распознавания в s3
 
 Эмоциональная окраска голоса.
 
-| Имя | Значение| Описание |
-|:----|:--------| :--------|
-| VOICE_STYLE_NEUTRAL  | 0        | Спокойное состояние.|
-| VOICE_STYLE_HAPPY | 1        | Радость.              |
-| VOICE_STYLE_ANGRY   | 2        | Злость.               |
-| VOICE_STYLE_SAD | 3        | Грусть.              |
-| VOICE_STYLE_SURPRISED   | 4        | Удивление.               |
+| Имя | Значение | Описание |
+| :-- | :-- | :-- |
+| VOICE_STYLE_NEUTRAL | 0 | Спокойное состояние. |
+| VOICE_STYLE_HAPPY | 1 | Радость. |
+| VOICE_STYLE_ANGRY | 2 | Злость. |
+| VOICE_STYLE_SAD | 3 | Грусть. |
+| VOICE_STYLE_SURPRISED | 4 | Удивление. |
+| VOICE_STYLE_CONVERSATIONAL | 5 | Разговорная речь. |
 
 ###### SynthesizeOptions
 
@@ -908,12 +891,6 @@ Audiogram сохраняет результат распознавания в s3
 | voice_name            | string       | Имя голоса. Список доступных моделей:<br> <u>женские голоса</u>:<br> <li> borisova<br> <li> kishchik<br> <u>мужские голоса</u>:<br> <li> gandzhaev<br> <li> gavrilov|
 | synthesize_options            | SynthesizeOptions       | Опции синтеза аудио.|
 
-###### ResponseHeader
-
-| Поле | Тип | Описание |
-| :----- | :----- | :----- |
-| timestamp | uint64 | Время отправки ответа на стороне Audiogram. Позволяет высчитать сетевую задержку. |
-
 ###### StreamingSynthesizeSpeechResponse
 
 Результат работы потокового синтеза речи.
@@ -921,7 +898,7 @@ Audiogram сохраняет результат распознавания в s3
 | Поле              | Тип                        | Описание                       |
 | :------------     |:---------                  | :------------------------------|
 | audio  | bytes | Байты аудиоданных без заголовка, закодированные, как указано в encoding и заданной в sample_rate_hertz частотой дискретизации.<br> Результат синтеза может прийти в нескольких ответах, по мере их синтезирования.      |
-| header  | ResponseHeader | Сообщение типа ResponseHeader. |
+| header  | mts.ai.audiogram.response_header.v1.ResponseHeader | Сообщение типа ResponseHeader. |
 
 ###### SynthesizeSpeechResponse
 
@@ -930,7 +907,7 @@ Audiogram сохраняет результат распознавания в s3
 | Поле              | Тип                        | Описание                       |
 | :------------     |:---------                  | :------------------------------|
 | audio  | bytes | В данном поле передаётся целый синтезированный аудиофайл с заголовками в формате, заданном в encoding и заданной в sample_rate_hertz частотой дискретизации.      |
-| header  | ResponseHeader | Сообщение типа ResponseHeader. |
+| header  | mts.ai.audiogram.response_header.v1.ResponseHeader | Сообщение типа ResponseHeader. |
 
 ###### ModelsInfo
 
@@ -939,7 +916,7 @@ Audiogram сохраняет результат распознавания в s3
 | Поле              | Тип                        | Описание                       |
 | :------------     |:---------                  | :------------------------------|
 | models  | repeated ModelInfo | Список доступных голосов для синтеза речи.      |
-| header  | ResponseHeader | Сообщение типа ResponseHeader. |
+| header  | mts.ai.audiogram.response_header.v1.ResponseHeader | Сообщение типа ResponseHeader. |
 
 ###### ModelInfo
 

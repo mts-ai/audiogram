@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/empty.proto";
+import "response_header.proto";
 import "stt_response.proto";
 
 package mts.ai.audiogram.stt.v3;
@@ -141,7 +142,7 @@ message SpeakerLabelingConfig{
 
 message ModelsInfo {
   repeated ModelInfo models = 1;
-  mts.ai.audiogram.stt_response.v1.ResponseHeader header = 2;
+  mts.ai.audiogram.response_header.v1.ResponseHeader header = 2;
 }
 
 message ModelInfo {
