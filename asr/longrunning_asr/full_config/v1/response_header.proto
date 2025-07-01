@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package mts.ai.audiogram.response_header.v1;
+
+message ResponseHeader {
+    uint64 timestamp = 1;
+}
