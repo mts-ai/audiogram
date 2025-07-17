@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package mts.ai.audiogram.voice_cloning.v1;
+import "google/protobuf/empty.proto";
+import "stt_v3.proto";
+
+message TaskInfo { // результат выполнения
+    enum Status {
+        UNDEFINED = 0;
+        CREATING = 1;
+        READY = 2;
+        ERROR = 3;
+    }
+    string voice_id = 1;
+    Status status = 2;
+}
+
+message AudioFormat {
+  mts.ai.audiogram.stt.v3.AudioEncoding encoding = 1;
+  uint32 sample_rate_hertz = 2;
+  uint32 audio_channel_count = 3;
+}
+
+message CloneVoiceRequest {
+    AudioFormat audio_format = 1;
+    bytes signal = 2; // pcm int16 le 16 kHz
+}
+
+message TaskId {
+    string val = 1;
+}
+
+message DeleteVoiceRequest {
+    string voice_id = 1;
+}
+
+service VoiceCloning {
+    rpc CloneVoice(CloneVoiceRequest) returns (TaskId);
+    rpc GetTaskInfo(TaskId) returns (TaskInfo);
+    rpc DeleteVoice(DeleteVoiceRequest) returns (google.protobuf.Empty);
+}
