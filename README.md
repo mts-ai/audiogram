@@ -1,19 +1,45 @@
 # Audiogram
 
-Audiogram - это сервис, оказывающий услуги по синтезу и распознаванию речи.
+Audiogram - это сервис, оказывающий услуги по синтезу, распознаванию и клонированию речи.
 
-В данном репозитории хранятся:
+Во время распознавания могут выполняться дополнительные действия:
 
-* [руководство по эксплуатации Audiogram](https://github.com/mts-ai/audiogram/blob/main/AG_manual_ru.md);
+* анализ речи на предмет спуфинг-атаки (является ли речь настоящей или синтезированной);
 
-* [публичный proto-файл для распознавания речи](https://github.com/mts-ai/audiogram/blob/main/asr/v3/stt_v3.proto);
+* определение пола, возраста и эмоционального настроя говорящего;
 
-* [публичный proto-файл для синтеза речи](https://github.com/mts-ai/audiogram/blob/main/tts/v2/tts.proto);
+* диаризация речи (разделение и группировка произнесенных реплик по участникам беседы);
 
-* [примеры кода клиентских приложений](https://github.com/mts-ai/audiogram/tree/main/demo_clients)  
-  
-  **Внимание!** Эти примеры создавались для [stt_v3.proto](https://github.com/mts-ai/audiogram/blob/main/asr/v3/stt_v3.proto) и [tts_v2.proto](https://github.com/mts-ai/audiogram/blob/main/tts/v2/tts.proto)  
-  В качестве образцов кода клиентских приложений [для предыдущей версии stt.proto файла](https://github.com/mts-ai/audiogram/blob/main/asr/v2/stt.proto) используйте следующие примеры:
+* и другие.
 
-     * [распознавание в файловом режиме](https://github.com/mts-ai/audiogram/blob/main/asr/v2/python3/recognize_file.py)
-     * [распознавание в потоковом режиме](https://github.com/mts-ai/audiogram/blob/main/asr/v2/python3/recognize_stream.py)
+## В данном репозитории хранятся:
+
+<u>Документация</u>:
+
+* [руководство по эксплуатации Audiogram](https://github.com/mts-ai/audiogram/blob/main/AG_manual_ru.md)
+
+<u>Для синхронного распознавания речи</u>:
+
+* [публичные .proto-файлы для создания клиентского приложения, отправляющего запросы на синхронное распознавание через полную конфигурацию настроек](https://github.com/mts-ai/audiogram/tree/main/asr/asr/full_config/v3);
+
+* [публичные .proto-файлы для создания клиентского приложения, отправляющего запросы на синхронное распознавание через пресеты (заранее сконфигурированные наборы настроек под определенного Заказчика)](https://github.com/mts-ai/audiogram/tree/main/asr/asr/presets/v1).
+
+<u>Для асинхронного (отложенного) распознавания речи</u>:
+
+* [публичные .proto-файлы для создания клиентского приложения, отправляющего запросы на асинхронное распознавание через полную конфигурацию настроек](https://github.com/mts-ai/audiogram/tree/main/asr/longrunning_asr/full_config/v1);
+
+* [публичные .proto-файлы для создания клиентского приложения, отправляющего запросы на асинхронное распознавание через пресеты (заранее сконфигурированные наборы настроек под определенного Заказчика)](https://github.com/mts-ai/audiogram/tree/main/asr/longrunning_asr/presets/v1).
+
+<u>Для синтеза речи</u>:
+
+* [публичные .proto-файлы для создания клиентского приложения, отправляющего запросы на синтез через полную конфигурацию настроек](https://github.com/mts-ai/audiogram/tree/main/tts/full_config/v2);
+
+* [публичные .proto-файлы для создания клиентского приложения, отправляющего запросы на синтез через пресеты (заранее сконфигурированные наборы настроек под определенного Заказчика)](https://github.com/mts-ai/audiogram/tree/main/tts/presets/v1).
+
+<u>Для клонирования голоса</u>:
+
+* [публичные .proto-файлы для создания клиентского приложения, отправляющего запросы на клонирование человеческого голоса](https://github.com/mts-ai/audiogram/tree/main/voice_cloning/v1)
+
+<u>Демо-клиенты</u>:
+
+* [демонстрационные версии клиентских приложений, которые можно использовать в качестве примера при создании собственного приложения](https://github.com/mts-ai/audiogram/tree/main/demo_clients)
