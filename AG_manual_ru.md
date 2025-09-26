@@ -1040,6 +1040,296 @@ SSML (Speech Synthesis Markup Language) – это язык разметки с 
 
 4. Синтез текста без SSML-разметки и синтез этого же текста с разметкой не будут различаться по нагрузке на систему.
 
+#### Тег \<say-as> для озвучки числительных
+
+Русский язык относится к группе флективных языков. Это означает, что различные грамматические категории (род, число, падеж и т. д.) выражаются в пределах одного слова при помощи окончаний, суффиксов и других морфологических средств.
+
+Такие нюансы делают русский язык не самым простым для озвучки машиной. ML-модели могут допускать ошибки, особенно при озвучке различных числительных. Избежать ошибок позволяет настройка параметров озвучки при помощи SSML-тега \<say-as>.
+
+В этом разделе рассмотрим как настроить озвучку числительных при помощи тега \<say-as>, но сначала вспомним какие у числительных бывают род, число и падеж, разделим числительные на категории, а также рассмотрим структуру тега \<say-as>.
+
+**<u>Род</u>**
+
+| Род | Описание | Пример |
+| :-- | :-- | :-- |
+| masculine | мужской род | один файл |
+| feminine | женский род | одна папка |
+| neuter | средний род | одно окружение |
+
+**<u>Число</u>**
+
+Числительные бывают единственного и множественного числа. По умолчанию числительные озвучиваются в единственном числе.
+
+Если необходимо озвучить во множественном числе, это надо указать с помощью параметра **plural**. Примеры представлены в дальнейших описаниях.
+
+| Число | Описание | Пример |
+| :-- | :-- | :-- |
+| plural | множественное число | три файла |
+
+**<u>Падеж</u>**
+
+| Падеж | Описание | Пример |
+| :-- | :-- | :-- |
+| nominative | именительный - отвечает на вопросы кто?/что? | кто?/что? - один рубль |
+| genitive | родительный - отвечает на вопросы кого?/чего? | нет кого?/чего? - пяти рублей |
+| dative | дательный - отвечает на вопросы кому?/чему? | дать кому?/чему? - четырем администраторам |
+| accusative | винительный - отвечает на вопросы кого?/что? | вижу кого?/что? - три файла |
+| ablative | творительный - отвечает на вопросы кем?/чем? | установлено кем?/чем? - двумя администраторами |
+| prepositional | предложный - отвечает на вопросы о ком?/о чем? | рассказываю о ком?/о чем? - о десяти рублях |
+
+**<u>Категории числительных</u>**
+
+| Категория числительных | Описание | Пример |
+| :-- | :-- | :-- |
+| cardinal | количественные числительные | один файл |
+| ordinal | порядковые числительные | первый файл |
+| date | дата | одиннадцатого августа две тысячи двадцать четвертого |
+| time | время | одиннадцать часов двадцать четыре минуты |
+| telephone | номер телефона | семь, девятьсот пятнадцать, сто девяносто, ноль семь, ноль два |
+| money | денежная сумма | десять рублей пятьдесят копеек |
+| split-by | произнесение числа по группам его цифр | сто двадцать три четыреста пятьдесят шесть |
+| fraction | дробные числа | две третьих |
+| decimal | десятичные дроби | одна целая одна десятая |
+| non-roman | правильное произнесение букв, которые можно спутать с римскими цифрами | размер одежды икс эль |
+| _fulldate | произнесение даты полностью | август две тысячи двадцать четыре |
+| _word | добавление слова "год/года" после произнесения года | одиннадцатого августа две тысячи двадцать четвертого года |
+
+**<u>Структура тега \<say-as></u>**
+
+У тега \<say-as> есть ряд обязательных и необязательных атрибутов:
+
+| Элемент | Описание | Обязательность | Пример |
+| :-- | :-- | :-- | :-- |
+| say-as | тег | Обязательный | `<speak><say-as interpret-as="cardinal" format="feminine_nominative">1</say-as> ложка</speak>` |
+| interpret-as | атрибут | Обязательный | `<speak><say-as interpret-as="cardinal" format="feminine_nominative">1</say-as> ложка</speak>` |
+| format | атрибут | Необязательный | `<speak><say-as interpret-as="cardinal" format="feminine_nominative">1</say-as> ложка</speak>` |
+| detail | атрибут | Необязательный | `<speak><say-as interpret-as="cardinal" format="nominative" detail = "3">1</say-as> 12345 </speak>` |
+
+##### cardinal
+
+| Описание | Вид | Значение по умолчанию |
+| :-- | :-- | :-- |
+| Произнесение количественного числительного в указанном роде, числе и падеже. | `<speak><say-as interpret-as="cardinal" format="feminine_nominative">1</say-as> ложка</speak>` | Количественное числительное произносится в masculine nominative (в единственном числе). |
+
+Примеры использования:
+
+| Оформление | Как будет озвучено | Комментарий |
+| :-- | :-- | :-- |
+| `<speak><say-as interpret-as="cardinal" format="accusative">1</say-as></speak>` | `<speak>одного</speak>` | Не указан род в format, раскрываем в masculine accusative. |
+| `<speak><say-as interpret-as="cardinal" format="dative_plural">1</say-as></speak>` | `<speak>одним</speak>` | Изменение порядка аргументов внутри format ошибкой не считается. Указаны число (вместо рода) и падеж, раскрываем в plural dative. |
+| `<speak><say-as interpret-as="cardinal" format="feminine">1</say-as></speak>` | `<speak>одна</speak>` | Не указан падеж в format, раскрываем в feminine nominative. |
+| `<speak><say-as interpret-as="cardinal" format="masculine_plural_dative">1</say-as></speak>` | `Error, <speak>один</speak>` | Неконсистентный тег - число будет озвучено по умолчанию, но параллельно в лог будет сделана запись об ошибке. |
+| `<speak><say-as interpret-as="cardinal" format="plural_dative">1</say-as></speak>` | `<speak>одним</speak>` | Указаны число (вместо рода) и падеж, раскрываем в plural dative. |
+| `<speak><say-as interpret-as="cardinal" format="plural_dative">1</say-as></speak> ложку` | `Error` | Произойдет ошибка синтеза. |
+| `<speak><say-as interpret-as="cardinal" format="plural_dative">1 ложку</say-as></speak>` | `Error, <speak>одним</speak>` | Неконсистентный тег - из тега уберется все, кроме числительного, после чего оно будет озвучено по значению format. Также параллельно в лог будет сделана запись об ошибке. |
+| `<speak><say-as interpret-as="cardinal">1</say-as></speak>` | `<speak>один</speak>` | Тут не указан format, значит раскрываем по умолчанию в masculine nominative. |
+| `<speak><say-as interpret-as="cardinal">-1</say-as></speak>` | `<speak>минус один</speak>` | Если перед числом стоит минус, он будет озвучен. |
+| `<speak>нет <say-as interpret-as="cardinal" format="accusative">1</say-as> ботинка</speak>` | `<speak>нет одного ботинка</speak>` | Число внутри тега следует писать без пробелов. Так как в format не указан род, то числительное будет озвучено в masculine accusative. <br><br>Если необходимо добавить контекст (правый, левый, правый и левый), то его следует писать, сохраняя пробелы как в обычном тексте. |
+| `<speak>нет <say-as interpret-as="cardinal" format="genitive">1</say-as> ботинков</speak>` | `<speak>нет одного ботинков</speak>` | Теги не подразумевают склонение контекста. Так как в format не указан род, то числительное будет озвучено в masculine accusative. |
+
+##### ordinal
+
+| Описание | Вид | Значение по умолчанию |
+| :-- | :-- | :-- |
+| Произнесение порядкового числительного в указанном роде, числе и падеже. | `<speak><say-as interpret-as="ordinal" format="feminine_nominative">1</say-as> этаж</speak>` | Порядковое числительное произносится в masculine nominative (в единственном числе). |
+
+Примеры использования:
+
+| Оформление | Как будет озвучено | Комментарий |
+| :-- | :-- | :-- |
+| `<speak><say-as interpret-as="cardinal">1</say-as></speak>` | `<speak>первый</speak>` | Тут не указан format, значит раскрываем по умолчанию в masculine nominative. |
+| `<speak><say-as interpret-as="cardinal">-1</say-as></speak>` | `<speak>минус первый</speak>` | Если перед числом стоит минус, он будет озвучен. |
+| `<speak><say-as interpret-as="cardinal" format="feminine">1</say-as></speak>` | `<speak>первая</speak>` | Не указан падеж в format, раскрываем в feminine nominative. |
+| `<speak><say-as interpret-as="cardinal" format="accusative">1</say-as></speak>` | `<speak>первого</speak>` | Не указан род в format, раскрываем в masculine accusative. |
+| `<speak><say-as interpret-as="cardinal" format="plural_dative">1</say-as></speak>` | `<speak>первым</speak>` | Указаны число (вместо рода) и падеж, раскрываем в plural dative. |
+| `<speak>нет <say-as interpret-as="cardinal" format="accusative">1</say-as> этажа</speak>` | `<speak>нет первого этажа</speak>` | Число внутри тега следует писать без пробелов. <br><br>Если необходимо добавить контекст, то его следует писать, сохраняя пробелы как в обычном тексте. |
+| `<speak><say-as interpret-as="cardinal" format="dative_plural">1</say-as></speak>` | `<speak>первым</speak>` | Изменение порядка аргументов внутри format не считается ошибкой. Указаны число (вместо рода) и падеж, поэтому числительное будет озвучено в plural dative. |
+| `<speak><say-as interpret-as="cardinal" format="masculine_plural_dative">1</say-as></speak>` | `Error, <speak>первый</speak>` | Неконсистентный тег - число будет озвучено по умолчанию. Параллельно в лог будет сделана запись об ошибке. |
+| `<speak><say-as interpret-as="cardinal" format="plural_dative">1 этажам</say-as></speak>` | `Error, <speak>первым</speak>` | Неконсистентный тег - из тега уберется все, кроме числительного, после чего оно будет озвучено по значению format. Также параллельно в лог будет сделана запись об ошибке. |
+| `<speak><say-as interpret-as="cardinal" format="plural_dative">1</say-as></speak> этажам` | `Error` | Произойдет ошибка синтеза. |
+| `<speak>нет <say-as interpret-as="cardinal" format="genitive">1</say-as> этажей</speak>` | `<speak>нет первого этажей</speak>` | Теги не подразумевают склонение контекста. Так как в format не указан род, то числительное будет озвучено в masculine accusative. |
+
+##### date
+
+| Описание | Вид | Значение по умолчанию |
+| :-- | :-- | :-- |
+| Произнесение дат в указанном формате. | `<speak><say-as interpret-as="date" format="nominative" detail="d.m.y">11.08.2024</say-as></speak>` | d.m.y в именительном падеже. |
+
+| detail | Описание |
+| :-- | :-- |
+| d.m.y (d-m-y, d/m/y) | Любые комбинации дня, месяца и года, разделенные одним из 3 символов "." или "-" или "/" |
+
+Примеры использования:
+
+| Оформление | Как будет озвучено | Комментарий |
+| :-- | :-- | :-- |
+| `<speak><say-as interpret-as="date">11.08.2024</say-as></speak>` | `<speak>одиннадцатое августа две тысячи двадцать четвертый</speak>` | день, месяц и год <br><br>detail не указан, по умолчанию d.m.y <br><br>format не указан, по умолчанию в именительном падеже |
+| `<speak><say-as interpret-as="date" detail="d.m.y">11.08.2024</say-as></speak>` | `<speak>одиннадцатое августа две тысячи двадцать четвертый</speak>` | день, месяц и год с разделителем. <br><br>format не указан, по умолчанию в именительном падеже |
+| `<speak><say-as interpret-as="date" format="genitive" detail="d.m.y">11.08.2024</say-as></speak>` | `<speak>одиннадцатого августа две тысячи двадцать четвертого</speak>` | с разделителем. <br><br>format указан, склоняем в родительном падеже |
+| `<speak><say-as interpret-as="date" detail="d.m">11.08</say-as></speak>` | `<speak>одиннадцатое августа</speak>` | в detail день и месяц с разделителем. <br><br>format не указан, по умолчанию в именительном падеже |
+| `<speak><say-as interpret-as="date" detail="y">2024</say-as></speak>` | `<speak>две тысячи двадцать четвертый</speak>` | в detail только год, разделитель не нужен и не указывается. <br><br>format не указан, по умолчанию в именительном падеже |
+| `<speak><say-as interpret-as="date" detail="m.y">08.2024</say-as></speak>` | `<speak>август две тысячи двадцать четвертый</speak>` | в detail месяц и год с разделителем. <br><br>format не указан, по умолчанию в именительном падеже |
+| `<speak><say-as interpret-as="date" detail="m">08</say-as></speak>` | `<speak>август</speak>` | в detail только месяц , разделитель не нужен и не указывается. <br><br>format не указан, по умолчанию в именительном падеже |
+| `<speak><say-as interpret-as="date" detail="d">11</say-as></speak>` | `<speak>одиннадцатое</speak>` | в detail только день, разделитель не нужен и не указывается.
+<br><br>format не указан, по умолчанию в именительном падеже |
+| `<speak><say-as interpret-as="date" detail="d-m-y">11-08-2024</say-as></speak>` | `<speak>одиннадцатое августа две тысячи двадцать четвертый</speak>` | Разделитель - <br><br>format не указан, по умолчанию в именительном падеже |
+| `<speak><say-as interpret-as="date" detail="d/m/y">11/08/2024</say-as></speak>` | `<speak>одиннадцатое августа две тысячи двадцать четвертый</speak>` | Разделитель / <br><br>format не указан, по умолчанию в именительном падеже |
+| `<speak><say-as interpret-as="date" detail="m/d/y">08/11/2024</say-as></speak>` | `<speak>одиннадцатое августа две тысячи двадцать четвертый</speak>` | "американский" формат дат, format не указан, по умолчанию в именительном падеже |
+| `<speak><say-as interpret-as="ordinal" detail="y">2024</say-as></speak>` | `Error, <speak>две тысячи двадцать четыре</speak>` | Неконсистентный тег - число будет озвучено по умолчанию как cardinal masculine nominative |
+
+##### time
+
+| Описание | Вид | Значение по умолчанию |
+| :-- | :-- | :-- |
+| Произнесение времени в указанном формате. | `<speak><say-as interpret-as="time" format="nominative" detail="h:m">11:24</say-as></speak>` | Часы и минуты через : в именительном падеже (h:m). |
+
+| detail | Описание |
+| :-- | :-- |
+| h:m | Указание формата (hm: часы и минуты или hms: часы, минуты, секунды) и разделителя (: . -) |
+
+Примеры использования:
+
+| Оформление | Как будет озвучено | Комментарий |
+| :-- | :-- | :-- |
+| `<speak><say-as interpret-as="time" detail="h:m">11:24</say-as></speak>` | `<speak>одиннадцать часов двадцать четыре минуты</speak>` | часы и минуты, format не указан, по умолчанию nominative |
+| `<speak><say-as interpret-as="time" detail="h:m:s">11:24:03</say-as></speak>` | `<speak>одиннадцать часов двадцать четыре минуты три секунды</speak>` | часы, минуты и секунды, format не указан, по умолчанию nominative |
+| `<speak><say-as interpret-as="time" format="genitive" detail="h<speak>одиннадцать часов двадцать четыре минуты</speak>:m">11:24</say-as></speak>` | `<speak>одиннадцати часов двадцати четырёх минут</speak>` | часы, минуты в родительном падеже |
+| `<speak><say-as interpret-as="time">11:24</say-as></speak>` | `<speak>одиннадцать часов двадцать четыре минуты</speak>` | format не указан, по умолчанию nominative, detail не указан, по умолчанию h:m |
+
+##### telephone
+
+| Описание | Вид | Значение по умолчанию |
+| :-- | :-- | :-- |
+| Озвучка номера телефона (русский формат и полные номера 10-11 цифр; номер начинается с +7, 8 или кода оператора) | `<speak><say-as interpret-as="telephone" detail="RU">+7 (909) 2282424</say-as></speak>` | По умолчанию обрабатываются номера телефонов 9-11 цифр (RU).<br><br> Без + (либо выносить его за say-as) |
+
+Примеры использования:
+
+| Оформление | Как будет озвучено | Комментарий |
+| :-- | :-- | :-- |
+| `<speak><say-as interpret-as="telephone">7 (915) 1900702</say-as></speak>` | `<speak>семь, девятьсот пятнадцать, сто девяносто ноль семь ноль два</speak>` |  |
+| `<speak><say-as interpret-as="telephone" detail="RU">7 (915) 1900702</say-as></speak>` | `<speak>семь девятьсот пятнадцать сто девяносто ноль семь ноль два</speak>` |  |
+| `<speak><say-as interpret-as="telephone">79151900702</say-as></speak>` | `<speak>семь девятьсот пятнадцать сто девяносто ноль семь ноль два</speak>` |  |
+| `<speak><say-as interpret-as="telephone">7-915-190-07-02</say-as></speak>` | `<speak>семь девятьсот пятнадцать сто девяносто ноль семь ноль два</speak>` |  |
+| `<speak><say-as interpret-as="telephone">8 (915) 1900702</say-as></speak>` | `<speak>восемь девятьсот пятнадцать сто девяносто ноль семь ноль два</speak>` |  |
+| `<speak><say-as interpret-as="telephone">9151900702</say-as></speak>` | `<speak>девятьсот пятнадцать сто девяносто ноль семь ноль два</speak>` |  |
+| `<speak><say-as interpret-as="telephone">7021</say-as></speak><speak>девятьсот пятнадцать сто девяносто ноль семь ноль два</speak>` | `<speak>семь тысяч двадцать один</speak>` | telephone не работает с короткими номерами - если нужно прочитать "семьдесят двадцать один" используйте тег split-by |
+| `<speak><say-as interpret-as="telephone">+7 (915) 1900702</say-as></speak>` | `Warning, <speak> семь девятьсот пятнадцать сто девяносто ноль семь ноль два</speak>` | Важно выносить + за тэг say-as. Правильно: `<speak>+<say-as interpret-as="telephone">7 (915) 1900702</say-as></speak>` |
+| `<speak><say-as interpret-as="telephone">55-86:2229634</say-as></speak>` | `Warning, <speak>пятьдесят пять восемьдесят шесть два миллиона двести двадцать девять тысяч шестьсот тридцать четыре</speak>` | В detail не указано, что это Бразилия. Поэтому не будет озвучено как номер телефона. <br><br>`<speak><say-as interpret-as="telephone" detail="BR">55-86:2229634</say-as></speak>` |
+
+##### money
+
+| Описание | Вид | Значение по умолчанию |
+| :-- | :-- | :-- |
+| Произнесение денежной суммы (с возможностью добавления валюты). | `<speak><say-as interpret-as="money" format="genitive" detail="RUB">10.65</say-as></speak>` | RUB (рубли) |
+
+Примеры использования:
+
+| Оформление | Как будет озвучено | Комментарий |
+| :-- | :-- | :-- |
+| `<speak><say-as interpret-as="money" format="nominative"detail="RUB">10.65</say-as></speak>` | `<speak>десять рублей шестьдесят пять копеек</speak>` |  |
+| `<speak><say-as interpret-as="money" format="nominative"detail="RUB">-10.65</say-as></speak>` | `<speak>минус десять рублей шестьдесят пять копеек</speak>` | Если перед числом стоит минус, он будет озвучен. |
+| `<speak><say-as interpret-as="money" format="nominative"detail="RUB">10</say-as></speak>` | `<speak>десять рублей</speak>` | Если передается число без точки, то оно будет озвучено как "столько-то рублей". |
+| `<speak><say-as interpret-as="money" format="nominative"detail="RUB">0.65</say-as></speak>` | `<speak>шестьдесят пять копеек</speak>` |  |
+| `<speak><say-as interpret-as="money" format="nominative"detail="RUB">10.00</say-as></speak>` | `<speak>десять рублей</speak>` |  |
+| `<speak>нет <say-as interpret-as="money">10.65</say-as></speak>` | `<speak>нет десять рублей шестьдесят пять копеек</speak>` | Теги не подразумевают склонения в зависимости от контекста. По умолчанию число будет озвучено в именительном падеже. Чтобы его корректно озвучить в родительном падеже, необходимо передать "genitive" в поле format. |
+| `<speak><say-as interpret-as="money" format="nominative"detail="USD">10.65</say-as></speak>` | `<speak>десять долларов шестьдесят пять центов</speak>` |  |
+| `<speak><say-as interpret-as="money">10.65</say-as></speak>` | `<speak>десять рублей шестьдесят пять копеек</speak>` |  |
+
+##### split-by
+
+| Описание | Вид | Значение по умолчанию |
+| :-- | :-- | :-- |
+| Озвучка чисел группами. | `<speak><say-as interpret-as="split-by" detail="3">123456</say-as></speak>` | Число разбивается на группы по 1 |
+
+| detail | Описание |
+| :-- | :-- |
+| 3 | На какие группы разбить большое число, принимает значение от 1 до 3. |
+
+Примеры использования:
+
+| Оформление | Как будет озвучено | Комментарий |
+| :-- | :-- | :-- |
+| `<speak><say-as interpret-as="split-by" detail="3">123456</say-as></speak>` | `<speak>сто двадцать три четыреста пятьдесят шесть</speak>` |  |
+| `<speak><say-as interpret-as="split-by" detail="2">123456</say-as></speak>` | `<speak>двенадцать тридцать четыре пятьдесят шесть</speak>` |  |
+| `<speak><say-as interpret-as="split-by" detail="1">123456</say-as></speak>` | `<speak>один два три четыре пять шесть</speak>` |  |
+| `<speak><say-as interpret-as="split-by" detail="3">12345</say-as></speak>` | `<speak>сто двадцать три сорок пять</speak>` | Если число не кратно шагу, то оставшаяся последовательность читается отдельно. |
+
+##### fraction
+
+| Описание | Вид | Значение по умолчанию |
+| :-- | :-- | :-- |
+| Озвучка дробей.  | `<speak><say-as interpret-as="fraction" format="nominative">2/3</say-as></speak>` | По умолчанию озвучка осуществляется в именительном падеже без специфичных слов вроде "половина/четверть/треть".  |
+
+Примеры использования:
+
+| Оформление | Как будет озвучено | Комментарий |
+| :-- | :-- | :-- |
+| `<speak><say-as interpret-as="fraction">2/3</say-as></speak>` | `<speak>две третьих</speak>` |  |
+| `<speak><say-as interpret-as="fraction">-2/3</say-as></speak>` | `<speak>минус две третьих</speak>` |  |
+| `<speak><say-as interpret-as="fraction">1/2</say-as></speak>` | `<speak>одна вторая</speak>` |  |
+| `<speak><say-as interpret-as="fraction">2/3</say-as> чашками</speak>` | `<speak>две третьих чашками</speak>` | Тэги не подразумевают склонения контекста. Обрабатываем в соответствии со значениями тэгов: не указан род в format, раскрываем в masculine accusative. |
+
+##### decimal
+
+| Описание | Вид | Значение по умолчанию |
+| :-- | :-- | :-- |
+| Озвучка десятичных дробей.<br><br> "2/3" не будет обрабатываться в рамках decimal (обработается в рамках fraction). "0.25 стакана" не будет озвучено как "четверть стакана". | `<speak><say-as interpret-as="decimal" format="nominative">1.1</say-as></speak>` | По умолчанию озвучка осуществляется в именительном падеже без специфичных слов вроде "половина/четверть/треть". |
+
+Примеры использования:
+
+| Оформление | Как будет озвучено | Комментарий |
+| :-- | :-- | :-- |
+| `<speak><say-as interpret-as="decimal">1.1</say-as></speak>` | `<speak>одна целая одна десятая</speak>` |  |
+| `<speak><say-as interpret-as="decimal">-1.1</say-as></speak>` | `<speak>минус одна целая одна десятая</speak>` |  |
+| `<speak><say-as interpret-as="decimal">1.10</say-as></speak>` | `<speak>одна целая одна десять сотых</speak>` | Округления не будет. Если оно нужно, необходимо подать на вход "1.1" вместо "1.10" |
+| `<speak><say-as interpret-as="decimal" format="genitive">1.1</say-as></speak>` | `<speak>одной целой одной десятой</speak>` |  |
+| `<speak>нет <say-as interpret-as="decimal" format="genitive">1.1</say-as> миллионах</speak>` | `<speak>нет одной целой одной десятой миллионах</speak>` | Тэги не подразумевают склонения контекста. |
+
+##### non-roman
+
+| Описание | Вид | Значение по умолчанию |
+| :-- | :-- | :-- |
+| Озвучка элементов, которые можно принять за римские цифры.<br><br> Например, "витамин C, одежда M, тариф X". | `<speak>Одежда <say-as interpret-as="non-roman">M</say-as></speak>` |  |
+
+Примеры использования:
+
+| Оформление | Как будет озвучено | Комментарий |
+| :-- | :-- | :-- |
+| `<speak>Одежда<say-as interpret-as="non-roman"> M</say-as></speak> ` | `<speak>Одежда ЭМ</speak>` | Любые слова, не относящиеся к non-roman числовым значениям должны находится ВНЕ тега \<say-as> |
+| `<speak>Одежда<say-as interpret-as="non-roman"> XL</say-as></speak> ` | `<speak>Одежда икс эль</speak>` | Non-roman значения будут представлены в буквенном виде. |
+
+##### _fulldate
+
+| Описание | Вид | Значение по умолчанию |
+| :-- | :-- | :-- |
+| Полная озвучка даты. | `<speak><say-as interpret-as="date" detail="m.y_fulldate">08.24</say-as></speak>` |  |
+
+Примеры использования:
+
+| Оформление | Как будет озвучено | Комментарий |
+| :-- | :-- | :-- |
+| `<speak><say-as interpret-as="date" detail="m.y_fulldate">08.24</say-as></speak>` | `<speak>август две тысячи двадцать четыре </speak> ` |  |
+
+##### _word
+
+| Описание | Вид | Значение по умолчанию |
+| :-- | :-- | :-- |
+| Добавление слова "год"/"года" к дате. | `<speak><say-as interpret-as="date" format="genitive" detail="d.m.y_word">11.08.2024</say-as></speak>` |  |
+
+Примеры использования:
+
+| Оформление | Как будет озвучено | Комментарий |
+| :-- | :-- | :-- |
+| `<speak><say-as interpret-as="date" detail="d.m.y_word">11.08.2024</say-as></speak>` | `<speak>одиннадцатое августа две тысячи двадцать четвертый год</speak>` | Для корректного использования необходимо указать падеж. |
+
+##### _fulldate и _word
+
+_fulldate и _word можно использовать вместе.
+
+| Описание | Вид | Значение по умолчанию |
+| :-- | :-- | :-- |
+| Полная дата и добавление слова "год"/"года". | `<speak><say-as interpret-as="date" detail="d.m.y_word_fulldate">11.08.24</say-as></speak>` | Для корректной работы необходимо указывать падеж. |
+
 ### Примеры использования SSML-тегов
 
 **<u>Пример 1</u>** (весь текст с SSML-разметкой, отправляемый на синтез, должен быть обернут в тег speak):
