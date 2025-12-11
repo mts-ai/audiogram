@@ -1,5 +1,4 @@
-
-<p style="font-size:30px"><b>Справочник REST API компонента audio-archive-back</p></b>
+# Справочник REST API компонента audio-archive-back
 
 &nbsp; &nbsp; 
 
