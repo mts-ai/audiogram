@@ -2,11 +2,11 @@ syntax = "proto3";
  
 import "stt_response.proto";
  
-package mts.ai.audiogram.stt_presets.v1;
+package mts.ai.audiogram.stt_presets.v2;
  
 message Preset{
   string preset_name = 1;
-  string preset_version = 2;
+  int32 preset_version = 2;
 } 
  
 message FileRecognizeRequest {

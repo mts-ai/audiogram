@@ -3,14 +3,14 @@ syntax = "proto3";
 import "stt_presets.proto";
 import "longrunning_task.proto";
 
-package mts.ai.audiogram.longrunning_presets.v1;
+package mts.ai.audiogram.longrunning_presets.v2;
 
 message LongRunningRecognizeRequest {
   message AudioPath {
     string bucket_name = 1;
     string object_name = 2;
   }
-  mts.ai.audiogram.stt_presets.v1.Preset preset = 1;
+  mts.ai.audiogram.stt_presets.v2.Preset preset = 1;
   repeated AudioPath s3_audio_path = 2;
 }
 
