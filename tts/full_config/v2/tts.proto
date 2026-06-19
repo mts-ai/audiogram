@@ -70,6 +70,17 @@ message SynthesizeSpeechRequest {
     SynthesizeOptions synthesize_options = 7;
 }
 
+message VoiceCloningRequest {
+    oneof input_source {
+        string text = 1;
+        string ssml = 2;
+    }
+    string language_code = 3;
+    AudioEncoding encoding = 4;
+    int32 sample_rate_hertz = 5;
+    string voice_id = 6;
+}
+
 message StreamingSynthesizeSpeechResponse {
     bytes audio = 1;
     mts.ai.audiogram.response_header.v1.ResponseHeader header = 2;
@@ -95,5 +106,7 @@ message ModelInfo {
 service TTS {
     rpc StreamingSynthesize (SynthesizeSpeechRequest) returns (stream StreamingSynthesizeSpeechResponse);
     rpc Synthesize (SynthesizeSpeechRequest) returns (SynthesizeSpeechResponse);
+    rpc StreamingVoiceCloning (VoiceCloningRequest) returns (stream StreamingSynthesizeSpeechResponse);
+    rpc VoiceCloning (VoiceCloningRequest) returns (SynthesizeSpeechResponse);
     rpc GetModelsInfo (google.protobuf.Empty) returns (ModelsInfo);
 }

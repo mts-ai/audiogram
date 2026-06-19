@@ -67,18 +67,20 @@ message VoiceActivityConfig {
   enum VoiceActivityDetectionAlgorithmUsage {
     USE_VAD = 0;
     DO_NOT_PERFORM_VOICE_ACTIVITY = 1;
-    USE_DEP = 2;
+    reserved 2;  // USE_DEP
     USE_ENHANCED_VAD = 3;
     USE_TARGET_SPEECH_VAD = 4;
+    USE_VAD_V2 = 5;
   }
 
   VoiceActivityDetectionAlgorithmUsage usage = 1;
   oneof algo_options {
     VADOptions vad_options = 2;
-    DEPOptions dep_options = 3;
     EnhancedVADOptions enhanced_vad_options = 4;
     TargetSpeechVADOptions target_speech_vad_options = 5;
+    VADV2Options vad_v2_options = 6;
   }
+  reserved 3;  // dep_options
 }
 
 message VADOptions {
@@ -94,9 +96,10 @@ message VADOptions {
   VoiceActivityDetectionMode mode = 5;
 }
 
-message DEPOptions {
-  float smoothed_window_threshold = 1;
-  int32 smoothed_window_ms = 2;
+message VADV2Options {
+  int32 min_silence_ms = 3;
+  float beginning_threshold = 2;
+  float ending_threshold = 4;
 }
 
 message EnhancedVADOptions {
