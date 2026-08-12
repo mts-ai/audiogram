@@ -17,6 +17,10 @@ Audiogram - это сервис, оказывающий услуги по син
 <u>Документация</u>:
 
 * [руководство по эксплуатации Audiogram](https://github.com/mts-ai/audiogram/blob/main/AG_manual_ru.md)
+* [руководство администратора Audiogram](https://github.com/mts-ai/audiogram/blob/main/AG_admin_guide_ru.md)
+* [руководство по подготовке инфраструктуры для установки Audiogram](https://github.com/mts-ai/audiogram/blob/main/AG_installation_infrastructure_guide_ru.md)
+* [руководство по установке Audiogram](https://github.com/mts-ai/audiogram/blob/main/AG_installation_guide_ru.md)
+* [справочник REST API компонента ground](https://github.com/mts-ai/audiogram/blob/main/AG_ground_REST_API_ru.md)
 
 <u>Для синхронного распознавания речи</u>:
 
