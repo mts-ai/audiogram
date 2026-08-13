@@ -27,7 +27,7 @@
     1) Найдите секцию **# Keycloak authentication credentials (ID and secret)**.
     2) Введите свои значения в параметрах **client_id** и **client_secret**. Их можно получить по запросу у DevOps Audiogram.
 5. В Терминале (или cmd в Windows), перейдите в директорию, в которой вы распаковали архив и создайте Python virtual environment (venv):
-     ``` windows 
+      ``` windows 
       $ python -m venv .venv
       ```
 6. Активируйте venv:
