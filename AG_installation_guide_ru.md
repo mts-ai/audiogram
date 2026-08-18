@@ -146,19 +146,19 @@ Audiogram состоит из 5 модулей:
 
 | **№** | **Название сервиса** | **Минимальные требования к CPU** | **Минимальные требования к памяти** |
 | ------ | ------- | ----- | ----- |
-| 1 | asr-api | 250m | 256.0 MiB |
+| 1 | asr-api | 1000m | 4.0 GiB |
 | 2 | asr-grpc-gateway | 200m | 256.0 MiB |
 | 3 | asr-e2e-mic | 8000m | 8.0 GiB |
 | 4 | asr-lr-mng | 1500m | 2.0 GiB |
 | 5 | asr-lr-process | 1500m | 2.0 GiB |
 | 6 | asr-antispoofing | 2000m | 4.0 GiB |
-| 7 | asr-genderage | 2000m | 4.0 GiB |
+| 7 | asr-genderage | 2000m | 8.0 GiB |
 | 8 | common-api | 0 | 0 |
 | 9 | common-grpc-gateway | 0 | 0 |
 | 10 | common-audio-transcoder | 1000m | 4.0 GiB |
-| 11 | common-sizing-calculator | 50m | 64.0 MiB |
+| 11 | common-sizing-calculator | 125m | 128.0 MiB |
 | 12 | common-bi-migrations | 500m | 512.0 MiB |
-| 13 | common-provisioning | 512m | 250.0 MiB |
+| 13 | common-provisioning | 250m | 512.0 MiB |
 | 14 | iam-admin-backend | 1000m | 2.0 GiB |
 | 15 | iam-admin-frontend | 250m | 256.0 MiB |
 | 16 | iam-pap | 500m | 512.0 MiB |
@@ -168,14 +168,15 @@ Audiogram состоит из 5 модулей:
 | 20 | tts-preproc | 4000m | 16.0 GiB |
 | 21 | tts-acronorm | 4000m | 8.0 GiB |
 | 22 | tts-embedding | 1000m | 4.0 GiB |
-| 23 | media-ground | 4000m | 4.0 GiB |
-| 24 | media-receiver | 8000m | 4.0 GiB |
-| 25 | media-receiver-balancer | 2000m | 2.0 GiB |
-| 26 | media-archive-back | 500m | 512.0 MiB |
+| 23 | tts-gradtts | 8000m | 30.0 GiB |
+| 24 | media-ground | 4000m | 4.0 GiB |
+| 25 | media-receiver | 8000m | 4.0 GiB |
+| 26 | media-receiver-balancer | 2000m | 2.0 GiB |
+| 27 | media-archive-back | 500m | 512.0 MiB |
 
 Суммарные минимальные значения для CPU-узлов:
-- CPU: 44962m (45 CPU cores)
-- Память: 71 GiB
+- CPU: 53520m (53 CPU cores)
+- Память: 109 GiB
 
 На GPU-узлах будут развернуты следующие сервисы Audiogram:
 
@@ -184,7 +185,7 @@ Audiogram состоит из 5 модулей:
 | 1 | asr-e2e | 8000m | 8.0 GiB | mig-1g.10gb |
 | 2 | asr-e2e-ec | 8000m | 8.0 GiB | mig-1g.10gb |
 | 3 | asr-vad | 8000m | 24.0 GiB | mig-1g.20gb |
-| 4 | asr-genderage | 2000m | 4.0 GiB | mig-1g.10gb |
+| 4 | asr-genderage | 2000m | 8.0 GiB | mig-1g.10gb |
 | 5 | asr-antispoofing | 2000m | 4.0 GiB | mig-1g.10gb |
 | 6 | asr-postproc | 6000m | 12.0 GiB | mig-1g.10gb |
 | 7 | tts-gradtts | 4000m | 4.0 GiB | mig-1g.20gb |
@@ -192,10 +193,10 @@ Audiogram состоит из 5 модулей:
 
 Суммарные минимальные значения для GPU-узлов:
 - CPU: 40000m (40 CPU cores)
-- Память: 68 GiB
+- Память: 72 GiB
 Суммарные минимальные значения для CPU и GPU узлов
-- CPU: 85000m (85 CPU cores)
-- Память: 139.0 GiB
+- CPU: 93000m (93 CPU cores)
+- Память: 181.0 GiB
 
 На GPU-узлах должны быть установлены графические ускорители. Всего Audiogram требует наличие двух видеокарт NVIDIA A100 80GB.
 
@@ -242,9 +243,7 @@ Audiogram состоит из 5 модулей:
 | REPLICA_ID | str | None | Да | Service instance ID. |
 | API_RATE_LIMITER_QUOTA_SYNC_SEC | int | 60 | Нет | Временной интервал в секундах между обращениями к сервису rate-limiter за получением квот. |
 | API_SERVICE_REGISTRY_REGISTER_EP | str | None | Да | Адрес обратной связи, который будет зарегистрирован в Service registry. |
-| API_TTS_S_DEFAULT_MODEL_TYPE | str | high_quality_v2 | Нет | Тип модели по умолчанию для стримовых запросов (light или high_quality; в режиме обратной совместимости с tts-agent - fastpitch или gradtts). |
-| API_TTS_F_DEFAULT_MODEL_TYPE | str | high_quality_v2 | Нет | Тип модели по умолчанию для файловых запросов (light или high_quality; в режиме обратной совместимости с tts-agent - fastpitch или gradtts). |
-| API_TTS_CLONING_MODEL_TYPE | str | high_quality_v2 | Нет | Тип модели для синтеза войс клонинга. |
+
 
 ###	grpc-gateway
 
@@ -259,14 +258,27 @@ Audiogram состоит из 5 модулей:
 
 | **Переменная** | **Тип** | **Значение по умолчанию** | **Обязательно** | **Описание** |
 | ------ | ------- | ----- | ----- |----- |
-| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | 10 | Нет | Задержка перед отклонением запросов. |
+| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | 290 | Нет | Задержка перед отклонением запросов. |
 | E2E_AGENT_ADDRESS | str | 0.0.0.0:50051 | Нет | Собственный адрес e2e-aгента. |
 | E2E_AGENT_METRICS_PORT | int | None | Да | Задает порт для предоставления Prometheus метрик. Если порт не задан, метрики не предоставляются. |
+| ASR_E2E_AGENT_ADDRESS | str | 0.0.0.0:50051 | Нет | Собственный адрес агента. |
+| ASR_E2E_AGENT_METRICS_PORT | int | None | Да | Задает порт для предоставления Prometheus метрик. Если порт не задан, метрики не предоставляются. |
+| ASR_E2E_AGENT_TRITON_ONLINE_ADDRESS | str | asr-e2e-server:8001 | Нет | Адрес Triton сервера в котором будут обрабатываться потоковые запросы. |
+| ASR_E2E_AGENT_TRITON_OFFLINE_ADDRESS | str | asr-e2e-server:8000 | Нет | Адрес Triton сервера в котором будут обрабатываться файловые запросы. |
+| ASR_E2E_SERVICE_REGISTRY_EP | str | None | Да | Адрес Service Registry (etcd), Если значение не задано, функции регистрации и масштабирования будут неактивны. |
+| ASR_E2E_AGENT_VALIDATE_REQ_CONFIG | int | 0 | Нет | Следует ли делать валидацию е2е агента. |
+| K8S_POD_NAME | str | None | Да | Имя пода в Kubernetes на котором развёрнут сервис. |
+| ASR_E2E_SERVICE_REGISTRY_REGISTER_EP | str | None | Да | Адрес обратной связи, который будет зарегистрирован в Service Registry, по нему сервис API будет пытаться подключиться к агенту. Если значение не задано, будет взят ASR_E2E_AGENT_ADDRESS. |
+| ASR_E2E_AGENT_PUNCT_DENORM_SERVER_ADDRESS | str | None | Да | Адрес сервиса пунктуации-денормализации. |
+
 
 ###	e2e
 
 | **Переменная** | **Тип** | **Значение по умолчанию** | **Обязательно** | **Описание** |
 | ------ | ------- | ----- | ----- |----- |
+| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | 10 | Нет | Задержка перед отклонением запросов. |
+| E2E_AGENT_ADDRESS | str | 0.0.0.0:50051 | Нет | Собственный адрес e2e-aгента. |
+| E2E_AGENT_METRICS_PORT | int | None | Да | Задает порт для предоставления Prometheus метрик. Если порт не задан, метрики не предоставляются. |
 | ASR_E2E_AGENT_ADDRESS | str | 0.0.0.0:50051 | Нет | Собственный адрес агента. |
 | ASR_E2E_AGENT_METRICS_PORT | int | None | Да | Задает порт для предоставления Prometheus метрик. Если порт не задан, метрики не предоставляются. |
 | ASR_E2E_AGENT_TRITON_ONLINE_ADDRESS | str | asr-e2e-server:8001 | Нет | Адрес Triton сервера в котором будут обрабатываться потоковые запросы. |
@@ -281,6 +293,9 @@ Audiogram состоит из 5 модулей:
 
 | **Переменная** | **Тип** | **Значение по умолчанию** | **Обязательно** | **Описание** |
 | ------ | ------- | ----- | ----- |----- |
+| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | 10 | Нет | Задержка перед отклонением запросов. |
+| E2E_AGENT_ADDRESS | str | 0.0.0.0:50051 | Нет | Собственный адрес e2e-aгента. |
+| E2E_AGENT_METRICS_PORT | int | None | Да | Задает порт для предоставления Prometheus метрик. Если порт не задан, метрики не предоставляются. |
 | ASR_E2E_AGENT_ADDRESS | str | 0.0.0.0:50051 | Нет | Собственный адрес агента. |
 | ASR_E2E_AGENT_METRICS_PORT | int | None | Да | Задает порт для предоставления Prometheus метрик. Если порт не задан, метрики не предоставляются. |
 | ASR_E2E_AGENT_TRITON_ONLINE_ADDRESS | str | asr-e2e-server:8001 | Нет | Адрес Triton сервера в котором будут обрабатываться потоковые запросы. |
@@ -312,36 +327,44 @@ Audiogram состоит из 5 модулей:
 | KAFKA_AUTH_PROTOCOL | str | PLAINTEXT | Да | Протокол аутентификации. |
 | KAFKA_AUTH_SASL_USERNAME | str | None | Да | Имя пользователя для SASL протокола. |
 | KAFKA_AUTH_SASL_PASSWORD | str | None | Да | Пароль для SASL протокола. |
-| LONGRUNNING_MAX_DIARIZATION_FILE_SIZE | str | 1073741824 | Нет | Максимум размер файла в S3-хранилище. |
+| LONGRUNNING_MAX_DIARIZATION_FILE_SIZE | str | 1073741824 | Нет | Максимальный размер аудиофайла, допустимый для обработки функцией диаризации (определения говорящего). |
+| LONGRUNNING_MAX_FILE_SIZE | str | 8000000000 | Нет | Определяет  максимальный размер аудиофайла.  |
+| LONGRUNNING_MAX_QUEUE_SIZE | str | 4 | Нет | Максимальное количество элементов очереди. Ограничивает размер очереди для исключения переполнения памяти. |
 
 ###	lr-process
 
 | **Переменная** | **Тип** | **Значение по умолчанию** | **Обязательно** | **Описание** |
 | ------ | ------- | ----- | ----- |----- |
-| GRPC_LISTEN_ADDRESS | str | 0.0.0.0:50051 | Нет | Адрес и порт на котором слушает gRPC API. |
-| HTTP_LISTEN_ADDRESS | str | 0.0.0.0:8888 | Нет | HTTP API aдрес и порт для получения метрик Prometheus. |
+| ASR_LRW_GRPC_LISTEN_ADDRESS | str | None | Нет | Адрес, на котором слушает gRPC API. |
+| ASR_LRW_ETCD_EP | str | None | Нет | Задает адрес (endpoint) кластера etcd. |
 | KAFKA_BROKER_HOST | str | None | Да | Kafka брокер hostname или IP адрес. |
-| KAFKA_TOPIC_REQUEST | str | None | Да | Имя топика откуда следует читать данные. |
-| KAFKA_BROKER_LIST | str | None | Да | Список брокеров, разделённых запятыми. |
-| KAFKA_AUTH_PROTOCOL | str | PLAINTEXT | Да | Протокол аутентификации. |
-| KAFKA_SASL_MECHANISM | str | PLAIN | Да | Механизм SASL. |
-| KAFKA_SASL_USERNAME | str | None | Да | Имя пользователя для SASL. |
-| KAFKA_SASL_PASSWORD | str | None | Да | Пароль для SASL. |
-| S3_SSL_ENABLE | bool | None | Да | Включить/выключить SSL при обмене данными с S3-хранилищем. |
-| S3_ENDPOINT | str | localhost | Да | URL до S3-хранилища. |
-| S3_ACCESS_KEY | str | None | Да | Ключ доступа в S3-хранилище. |
-| S3_SECRET_KEY | str | None | Да | Секретная строка для доступа в S3-хранилище. |
-| ARCHIVE_ADDRESS | str | None | Да | Адрес S3-хранилища. |
-| ETCD_ADDRESS | str | None | Да | Адрес Service Registry (etcd). |
-| TRANSCODER_POOL_ADDRESS | str | None | Да | Адрес группы транскодеров. |
-| TRANSCODER_POOL_PORT | int | None | Да | Порт группы транскодеров. |
-| VAD_POOL_SERVICE_GROUP | str | None | Да | URI пула сервисов vad. |
-| E2E_POOL_SERVICE_GROUP | str | None | Да | URI пула сервисов e2e. |
+| ASR_LRW_KAFKA_URL | str | None | Нет | URL сервиса Kafka. |
+| ASR_LRW_KAFKA_AUTH_PROTOCOL | str | PLAINTEXT | Да | Протокол аутентификации сервиса Kafka. |
+| ASR_LRW_KAFKA_AUTH_SASL_MECHANISM | str |  PLAIN | Да | Алгоритм работы SASL_PLAINTEXT/SASL_SSL авторизации. |
+| ASR_LRW_KAFKA_AUTH_SASL_USERNAME | str |  None  | Да | Логин пользователя в Kafka для протокола SASL_PLAINTEXT/SASL_SSL.  |
+| ASR_LRW_KAFKA_AUTH_SASL_PASSWORD | str |  None  | Да | Пароль пользователя в Kafka для протокола SASL_PLAINTEXT/SASL_SSL. |
+| ASR_LRW_KAFKA_RESPONSES_TOPIC | str |  None  | Да | Определяет название топика Kafka, в который сервис публикует результаты или ответы на обработанные запросы. |
+| ASR_LRW_S3_URL | str |  None  | Да | Эндпоинт S3-хранилища. |
+| ASR_LRW_S3_USE_SSL | bool |  false  | Да | Использовать SSL для S3-хранилища.  |
+| ASR_LRW_S3_ACCESS_KEY | str | None   | Да | Ключ доступа в S3-хранилище. |
+| ASR_LRW_S3_SECRET_KEY | str | None   | Да | Секретная строка для доступа в S3-хранилище. |
+| ASR_LRW_TRANSCODER_HOST | str | None   | Да | Хост группы транскодеров. |
+| ASR_LRW_TRANSCODER_PORT | int | None   | Да | Порт группы транскодеров. |
+| ASR_LRW_ARCHIVE_HOST | str | None   | Да | Хост S3-хранилища. |
+| ASR_LRW_ARCHIVE_PORT | int | None   | Да | Порт S3-хранилища. |
+| ASR_LRW_OTLP_COLLECTOR_ADDRESS | str | None   | Да | Адрес сервиса сбора данных трассировки (коллектор), например otlp-collector:4317. Если не задан, трассировка сервиса будет выключена. |
+| ASR_LRW_VAD_MAX_RTFX | int | None   | Да | Задает максимально-допустимое соотношение RTF (показателя скорости обработки) сервиса VAD. |
+| ASR_LRW_ASR_E2E_MAX_RTFX | int | None   | Да | Задает максимально-допустимое соотношение RTF (показателя скорости обработки) сервиса E2E. |
+| ASR_LRW_ARCHIVE_MAX_RTFX | int | None   | Да | Задает максимально-допустимое соотношение RTF (показателя скорости обработки) для архива. |
+| ASR_LRW_TRANSCODER_MAX_RTFX | int | None   | Да | Задает максимально-допустимое соотношение RTF (показателя скорости обработки) для сервиса транскодирования аудио.|
+| ASR_LRW_THREAD_COUNT | int | None   | Да | Задает количество рабочих потоков (threads), который сервис будет использовать для параллельной обработки задач. |
+
 
 ###	vad
 
 | **Переменная** | **Тип** | **Значение по умолчанию** | **Обязательно** | **Описание** |
 | ------ | ------- | ----- | ----- |----- |
+| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | 290 | Нет | Задержка перед отклонением запросов. |
 | VAD_AGENT_ADDRESS | str | 0.0.0.0:50051 | Нет | Собственный адрес сервиса vad. |
 | VAD_AGENT_METRICS_PORT | int | None | Да | Задаёт порт для предоставления Prometheus метрик. Если порт не задан, метрики не предоставляются. |
 | VAD_AGENT_TRITON_ADDRESS | str | None | Да | Адрес и порт на которых слушает Triton сервер. |
@@ -353,28 +376,37 @@ Audiogram состоит из 5 модулей:
 
 | **Переменная** | **Тип** | **Значение по умолчанию** | **Обязательно** | **Описание** |
 | ------ | ------- | ----- | ----- |----- |
+| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | 10 | Нет | Задержка перед отклонением запросов. |
+| GENDERAGE_AGENT_ADDRESS | str | 0.0.0.0:50051 | Нет | Собственный адрес сервиса Genderage. |
+| GENDERAGE_AGENT_METRICS_PORT | int | None | Да | Задаёт порт для предоставления Prometheus метрик. Если порт не задан, метрики не предоставляются. |
 | GRPC_LISTEN_ADDRESS | str | 0.0.0.0:50051 | Нет | Адрес и порт на которых слушает gRPC API. |
 | HTTP_LISTEN_ADDRESS | str | 0.0.0.0:8888 | Нет | HTTP API адрес и порт с которых получать метрики Prometheus. |
 | TRITON_ADDRESS | str | None | Да | Адрес и порт на которых слушает Triton сервер. |
 | SERVICE_REGISTRY_EP | str | None | Да | Адрес Service Registry. |
 | K8S_POD_NAME | str | None | Да | Имя пода в Kubernetes на котором развёрнут сервис. |
 | SERVICE_REGISTRY_REGISTER_EP | str | None | Да | Address сервиса Genderage agent, который надо зарегистрировать в Service Registry. |
-| GAE_CPU | bool | True | Нет | Запустить сервер для работы на CPU. |
+| GAE_CPU | bool | false | Нет | Запустить сервер для работы на CPU. |
 
 ###	antispoofing
 
 | **Переменная** | **Тип** | **Значение по умолчанию** | **Обязательно** | **Описание** |
 | ------ | ------- | ----- | ----- |----- |
-| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | 10 | Нет | Сколько секунд сервис должен ждать завершения активных запросов, прежде чем полностью завершить работу. |
+| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | 290 | Нет | Сколько секунд сервис должен ждать завершения активных запросов, прежде чем полностью завершить работу. |
 | ANTISPOOFING_AGENT_ADDRESS | str | None | Да | Собственный адрес сервиса. |
 | ANTISPOOFING_AGENT_METRICS_PORT | int | None | Да | Задаёт порт для предоставления Prometheus метрик. Если порт не задан, метрики не предоставляются. |
-| TRITON_PARAMETERS | str | --model-config-name=gpu | Нет | Выбор gpu или cpu модели для запуска в сервере. Допустимые значения: <ol> <li> "--model-config-name=gpu"</li><li>"--model-config-name=cpu"</li></ol> |
+| GRPC_LISTEN_ADDRESS | str | 0.0.0.0:50051 | Нет | Адрес и порт на которых слушает gRPC API. |
+| HTTP_LISTEN_ADDRESS | str | 0.0.0.0:8888 | Нет | HTTP API адрес и порт с которых получать метрики Prometheus. |
+| TRITON_ADDRESS | str | None | Да | Адрес и порт на которых слушает Triton сервер. |
+| SERVICE_REGISTRY_EP | str | None | Да | Адрес Service Registry. |
+| K8S_POD_NAME | str | None | Да | Имя пода в Kubernetes на котором развёрнут сервис. |
+| SERVICE_REGISTRY_REGISTER_EP | str | None | Да | Address сервиса antispoofing agent, который надо зарегистрировать в Service Registry. |
+
 
 ### postproc
 
 | **Переменная** | **Тип** | **Значение по умолчанию** | **Обязательно** | **Описание** |
 | ------ | ------- | ----- | ----- |----- |
-| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | None | Да | Сколько секунд сервис должен ждать завершения активных запросов, прежде чем полностью завершить работу. |
+| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | 5 | Да | Сколько секунд сервис должен ждать завершения активных запросов, прежде чем полностью завершить работу. |
 
 ## Модуль tts
 
@@ -382,24 +414,38 @@ Audiogram состоит из 5 модулей:
 
 | **Переменная** | **Тип** | **Значение по умолчанию** | **Обязательно** | **Описание** |
 | ------ | ------- | ----- | ----- |----- |
-| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | 10 | Нет | Сколько секунд сервис должен ждать завершения активных запросов, прежде чем полностью завершить работу. |
+| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | 5 | Нет | Сколько секунд сервис должен ждать завершения активных запросов, прежде чем полностью завершить работу. |
 
 ###	acronorm
 
 | **Переменная** | **Тип** | **Значение по умолчанию** | **Обязательно** | **Описание** |
 | ------ | ------- | ----- | ----- |----- |
-| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | 10 | Нет | Сколько секунд сервис должен ждать завершения активных запросов, прежде чем полностью завершить работу. |
+| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | 5 | Нет | Сколько секунд сервис должен ждать завершения активных запросов, прежде чем полностью завершить работу. |
 
 ###	gradtts
 
 | **Переменная** | **Тип** | **Значение по умолчанию** | **Обязательно** | **Описание** |
 | ------ | ------- | ----- | ----- |----- |
-| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | None | Да | Сколько секунд сервис должен ждать завершения активных запросов, прежде чем полностью завершить работу. |
+| GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | 290 | Да | Сколько секунд сервис должен ждать завершения активных запросов, прежде чем полностью завершить работу. |
 | TTS_AGENT_ADDRESS | str | None | Да | Собственный адрес сервиса. |
-| TTS_AGENT_ACRONYM_NUMB_NORM_SERVER_ADDRESS | str | None | Нет | Адрес Acronym-Number-normalization Server. |
-| TS_AGENT_METRICS_PORT | int |  | Нет | Задает порт для предоставления Prometheus метрик. Если порт не задан,  метрики не предоставляются. |
+| TS_AGENT_METRICS_PORT | int | None | Нет | Задает порт для предоставления Prometheus метрик. Если порт не задан,  метрики не предоставляются. |
 | TTS_LOAD_8 | bool | True | Нет | TTS load with a block size or alignment of 8. |
 | TTS_LOAD_22 | bool | True | Нет | TTS load with a block size or alignment of 22.  |
+| REDIS_HOST | str | None | Да | Имя хоста Redis. |
+| REDIS_PORT | int | None | Да | Redis порт. |
+| REDIS_PASSWORD | str | None | Да | Redis пароль. |
+| REDIS_DB | str | None | Да | Имя базы данных Redis. |
+| TTS_AGENT_REDIS_ADDRESS | str | None | Да | Адрес и порт на которых слушает Redis сервер.  |
+| TTS_AGENT_PROBE_READINESS_CHECK_TTS_CACHE_CONNECTIVITY | integer | 1 | Да | Включает/выключает readiness-проверку с сервисом tts-cache.  | 
+| TTS_AGENT_TRITON_ADDRESS | str | None | Да | Адрес и порт на которых слушает Triton сервер. |
+| TTS_SERVICE_REGISTRY_EP | str | None | Да |  Адрес Service Registry.  |
+| K8S_POD_NAME | str | None | Да | Имя пода в Kubernetes на котором развёрнут сервис. |
+| TTS_SERVICE_REGISTRY_REGISTER_EP | str | None | Да | Aдрес сервиса gradtts agent, который надо зарегистрировать в Service Registry.  |
+| TTS_AGENT_TRANSCRIBER_ADDRESS | str | None | Да |  Адрес модели transcriber. |
+| TTS_AGENT_ACRONYM_NUMB_NORM_SERVER_ADDRESS | str | None | Да | Адрес Acronym-Number-normalization сервера.  |
+| TTS_AGENT_INFER_REQ_LIMIT | int | 10 | Да | Ограничивает запросы в прослойку внутри агента, которая собирает батчи. |
+| TTS_AGENT_EXTRA_CACHE_KEY | int | None | Да | Дополнительный префикс для ключа кэша,который проставляется при развёртывании. |
+
 
 ###	embedding
 
@@ -426,13 +472,7 @@ Audiogram состоит из 5 модулей:
 | POSTGRES_PASSWORD | str | None | Да | Пароль пользователя PostgreSQL. |
 | POSTGRES_DB | str | None | Да | Имя базы данных PostgreSQL. |
 | DATABASE_URL | str | None | Да | URL базы данных PostgreSQL. |
-| DEVICE | str | cpu | Нет | Режим запуска DEVICE=gpu/cpu, default = cpu. |
-| MODEL_TYPE | str | onnx | Да | trt,onnx для DEVICE=gpu; <br> onnx,openvino,qonnx для DEVICE=cpu |
-| NCOUNT | int | 1 | Нет | Количество инстансов модели эмбеддера. |
-| INTRA | int | 1 | Нет | Установка параметра onnx intra_op_num_threads. |
-| INTER | int | 1 | Нет | Установка параметра onnx inter_op_num_threads. |
-| NUM_STREAMS | int | 1 | Нет | Установка параметра openvino num_streams. |
-| INFERENCE_NUM_THREADS | int | 1 | Нет | Установка параметра openvino inference_num_threads. |
+
 
 ##	Модуль common
 
@@ -449,6 +489,24 @@ Audiogram состоит из 5 модулей:
 | **Переменная** | **Тип** | **Значение по умолчанию** | **Обязательно** | **Описание** |
 | ------ | ------- | ----- | ----- |----- |
 | PORT | int | None | Да | Номер порта сервиса. |
+
+### bi-migrations
+
+| **Переменная** | **Тип** | **Значение по умолчанию** | **Обязательно** | **Описание** |
+| ------ | ------- | ----- | ----- |----- |
+| SERVICE_LISTEN_ADDRESS | string | 0.0.0.0 | Нет | Задает на каком сетевом адресе сервис должен принимать входящие соединения.  |
+| IC_KAFKA_ADMIN_API_CLIENT_DEBUG | string | conf | Нет | Флаг отладки для KAFKA ADMIN API CLIENT. Он включает логирование действий клиента, который управляет кластером Kafka.   |
+| IC_CLICKHOUSE_CLIENT_DEFAULT_DATABASE | string | default | Нет |Определяет имя базы данных по умолчанию, к которой будет подключаться клиент ClickHouse и выполнять запросы. Значение default означает, что будет использована стандартная база данных, создаваемая при установке ClickHouse. |
+
+### provisioning
+
+| **Переменная** | **Тип** | **Значение по умолчанию** | **Обязательно** | **Описание** |
+| ------ | ------- | ----- | ----- |----- |
+| IC_BI_MIGRATIONS_CLIENT_URL | string | None | Да | Определяет базовый URL-адрес эндпойнта, по которому клиент миграций будет обращаться к сервису, управляющему процессами миграций данных для  бизнес-аналитики (BI).  |
+| BI_CLI_NAMESPACE | string | audiogram.namespace | Нет | Определяет пространства имен (namespace), в котором будут выполняться операции BI-клиента. |
+| BI_CLI_PRODUCT_NAME | string | audiogram | Нет | Определяет логическое имя продукта, с которым работает экземпляр CLI-клиента. |
+| BI_CLI_STABLE | boolean | false | Нет | Флаг режима работы, который переключает поведение CLI-клиента на "стабильный" режим. |
+
 
 ## Модуль media
 
@@ -469,6 +527,13 @@ Audiogram состоит из 5 модулей:
 | REDIS_PASSWORD | str | None | Да | Redis пароль. |
 | REDIS_DB | str | None | Да | Имя базы данных Redis. |
 | REDIS_URI | str | None | Да | Redis URI. |
+| S3_ENDPOINT | str | None | Да | Endpoint S3-хранилища. |
+| S3_ACCESS_KEY | str | None | Да | Ключ доступа в S3-хранилище. |
+| S3_SECRET_KEY | str | None | Да | Секретная строка для доступа в S3-хранилище. |
+| S3_BUCKET_PATTERN | str | None | Да | Задает паттерн для формирования имени S3 бакета, в который сервис будет записывать или читать данные. |
+| IO_EXTREMUM_ARCHIVE_AGGREGATION_ENCRYPTION | str | None | Да | Задает алгоритм шифрования данных на этапе агрегации и архивирования.  |
+| IO_EXTREMUM_ARCHIVE_DECRYPT_PASSWORD | str | None | Да | Задает пароль для расшифровки зашифрованных архивных файлов.  |
+
 
 ### receiver
 
@@ -482,8 +547,8 @@ Audiogram состоит из 5 модулей:
 | S3_ENDPOINT | str | None | Да | Endpoint S3-хранилища. |
 | S3_ACCESS_KEY | str | None | Да | Ключ доступа в S3-хранилище. |
 | S3_SECRET_KEY | str | None | Да | Секретная строка для доступа в S3-хранилище. |
-| S3_BUCKET_PATTERN | str | None | Да | S3 bucket pattern. |
-| IO_EXTREMUM_RECEIVER_S3_CREATE-BUCKET-IF-NOT-EXIST | bool| None | Да | Создать бакет если он не существует. |
+| S3_BUCKET_PATTERN | str | None | Да | Задает паттерн для формирования имени S3 бакета, в который сервис будет записывать или читать данные. |
+| IO_EXTREMUM_RECEIVER_S3_CREATE-BUCKET-IF-NOT-EXIST | bool| None | Да | Создать бакет, если он не существует. |
 
 
 ###	receiver-balancer
@@ -518,9 +583,9 @@ Audiogram состоит из 5 модулей:
 | PAP_READINESS_URL | str | None | Да | URL Endpoint Readiness пробы сервиса PAP. |
 | FC_RATE_LIMITER_CLIENT_API_ADDRESS | str | None | Да | API endpoint сервиса Rate Limiter. |
 | FC_RATE_LIMITER_CLIENT_ENABLE_READINESS_CHECK | bool | true | Нет | Инструктирует клиента Rate Limiter выполнить проверку готовности, прежде чем считать себя работоспособным или начать обработку трафика. |
-| FC_RATE_LIMITER_CLIENT_USE_SSL | bool | true | Нет | Инструктирует клиента Rate Limiter использовать SSL. |
+| FC_RATE_LIMITER_CLIENT_USE_SSL | bool | false | Нет | Инструктирует клиента Rate Limiter использовать SSL. |
 | FC_SETTINGS_PROVIDER_CLIENT_API_ADDRESS | str | None | Да | Endpoint сервиса конфигурации. |
-| FC_SETTINGS_PROVIDER_CLIENT_ENABLE_READINESS_CHECK | bool | false | Да | Инструктирует клиента сервиса конфигурации выполнить проверку готовности, прежде чем считать себя работоспособным или начать обработку трафика. |
+| FC_SETTINGS_PROVIDER_CLIENT_ENABLE_READINESS_CHECK | bool | true | Да | Инструктирует клиента сервиса конфигурации выполнить проверку готовности, прежде чем считать себя работоспособным или начать обработку трафика. |
 | FC_SETTINGS_PROVIDER_CLIENT_USE_SSL | bool | false | Нет | Инструктирует клиента сервиса конфигурации использовать SSL. |
 | FC_SETTINGS_PROVIDER_CLIENT_TIMEOUT | int | 60 | Нет | Задержка перед отклонением запросов. |
 
