@@ -74,19 +74,19 @@ Audiogram состоит из 5 модулей:
 
 | **№** | **Название сервиса** | **Минимальные требования к CPU** | **Минимальные требования к памяти** |
 | ------ | ------- | ----- | ----- |
-| 1 | asr-api | 250m | 256.0 MiB |
+| 1 | asr-api | 1000m | 4.0 GiB |
 | 2 | asr-grpc-gateway | 200m | 256.0 MiB |
 | 3 | asr-e2e-mic | 8000m | 8.0 GiB |
 | 4 | asr-lr-mng | 1500m | 2.0 GiB |
 | 5 | asr-lr-process | 1500m | 2.0 GiB |
 | 6 | asr-antispoofing | 2000m | 4.0 GiB |
-| 7 | asr-genderage | 2000m | 4.0 GiB |
+| 7 | asr-genderage | 2000m | 8.0 GiB |
 | 8 | common-api | 0 | 0 |
 | 9 | common-grpc-gateway | 0 | 0 |
 | 10 | common-audio-transcoder | 1000m | 4.0 GiB |
-| 11 | common-sizing-calculator | 50m | 64.0 MiB |
+| 11 | common-sizing-calculator | 125m | 128.0 MiB |
 | 12 | common-bi-migrations | 500m | 512.0 MiB |
-| 13 | common-provisioning | 512m | 250.0 MiB |
+| 13 | common-provisioning | 250m | 512.0 MiB |
 | 14 | iam-admin-backend | 1000m | 2.0 GiB |
 | 15 | iam-admin-frontend | 250m | 256.0 MiB |
 | 16 | iam-pap | 500m | 512.0 MiB |
@@ -96,14 +96,15 @@ Audiogram состоит из 5 модулей:
 | 20 | tts-preproc | 4000m | 16.0 GiB |
 | 21 | tts-acronorm | 4000m | 8.0 GiB |
 | 22 | tts-embedding | 1000m | 4.0 GiB |
-| 23 | media-ground | 4000m | 4.0 GiB |
-| 24 | media-receiver | 8000m | 4.0 GiB |
-| 25 | media-receiver-balancer | 2000m | 2.0 GiB |
-| 26 | media-archive-back | 500m | 512.0 MiB |
+| 23 | tts-gradtts | 8000m | 30.0 GiB |
+| 24 | media-ground | 4000m | 4.0 GiB |
+| 25 | media-receiver | 8000m | 4.0 GiB |
+| 26 | media-receiver-balancer | 2000m | 2.0 GiB |
+| 27 | media-archive-back | 500m | 512.0 MiB |
 
 Суммарные минимальные значения для CPU-узлов:
-- CPU: 44962m (45 CPU cores)
-- Память: 71 GiB
+- CPU: 53520m (53 CPU cores)
+- Память: 109 GiB
 
 На GPU-узлах будут развернуты следующие сервисы Audiogram:
 
@@ -112,7 +113,7 @@ Audiogram состоит из 5 модулей:
 | 1 | asr-e2e | 8000m | 8.0 GiB | mig-1g.10gb |
 | 2 | asr-e2e-ec | 8000m | 8.0 GiB | mig-1g.10gb |
 | 3 | asr-vad | 8000m | 24.0 GiB | mig-1g.20gb |
-| 4 | asr-genderage | 2000m | 4.0 GiB | mig-1g.10gb |
+| 4 | asr-genderage | 2000m | 8.0 GiB | mig-1g.10gb |
 | 5 | asr-antispoofing | 2000m | 4.0 GiB | mig-1g.10gb |
 | 6 | asr-postproc | 6000m | 12.0 GiB | mig-1g.10gb |
 | 7 | tts-gradtts | 4000m | 4.0 GiB | mig-1g.20gb |
@@ -120,10 +121,10 @@ Audiogram состоит из 5 модулей:
 
 Суммарные минимальные значения для GPU-узлов:
 - CPU: 40000m (40 CPU cores)
-- Память: 68 GiB
+- Память: 72 GiB
 Суммарные минимальные значения для CPU и GPU узлов
-- CPU: 85000m (85 CPU cores)
-- Память: 139.0 GiB
+- CPU: 93000m (93 CPU cores)
+- Память: 181.0 GiB
 
 На GPU-узлах должны быть установлены графические ускорители. Всего Audiogram требует наличие двух видеокарт NVIDIA A100 80GB.
 
