@@ -151,7 +151,7 @@ ETCD используется в качестве service-registry. service-regi
 | genderage-agent | asr | grpc | Регистрация агента и отправка keep-alive хардбитов.|
 | antispoofing-agent | asr | grpc | Регистрация агента и отправка keep-alive хардбитов.|
 | tts-api | tts | grpc | Получение списка endpoints tts агентов. |
-| tts-agent | tts | Регистрация агента и отправка keep-alive хардбитов.|
+| tts-agent | tts | grpc | Регистрация агента и отправка keep-alive хардбитов.|
 
 ETCD раскатывается через helm-чарт. Дополнительной настройки не требуется.
 
