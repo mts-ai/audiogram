@@ -13,6 +13,7 @@
 | CPU узел | В Kubernetes – рабочий узел на котором единственным рабочим ресурсом является CPU (но не GPU).| 
 | Docker | Oткрытая платформа для разработки, доставки и запуска приложений в изолированных контейнерах. | 
 | Elastic Stack | Набор инструментов, включающий Elasticsearch, Kibana, Beats и Logstash, предназначенный для сбора, поиска, анализа и визуализации данных из любых источников в режиме реального времени. | 
+| ETCD | Распределенное отказоустойчивое хранилище данных типа «ключ-значение» со строгой последовательной согласованностью (на базе алгоритма консенсуса Raft), предназначенное для динамического обнаружения сервисов (Service Discovery), хранения конфигураций и синхронизации состояния компонентов инфраструктуры. | 
 | GiB (напр. 4.0 GiB) | От англ. Gibibyte. В Kubernetes – единица измерения, используемая для указания запросов и ограничений на использование оперативной памяти для контейнеров и подов. | 
 | GPU узел | В Kubernetes – рабочий узел на котором основным (наиболее мощным) ресурсом является GPU (графический ускоритель). | 
 | Ingress Controller | Специализированный балансировщик нагрузки и обратный прокси-сервер (обычно NGINX, HAProxy или Traefik), который управляет внешним HTTP/HTTPS-трафиком, поступающим в кластер Kubernetes. | 
@@ -87,24 +88,26 @@ Audiogram состоит из 5 модулей:
 | 11 | common-sizing-calculator | 125m | 128.0 MiB |
 | 12 | common-bi-migrations | 500m | 512.0 MiB |
 | 13 | common-provisioning | 250m | 512.0 MiB |
-| 14 | iam-admin-backend | 1000m | 2.0 GiB |
-| 15 | iam-admin-frontend | 250m | 256.0 MiB |
-| 16 | iam-pap | 500m | 512.0 MiB |
-| 17 | iam-pdp | 1000m | 256.0 MiB |
-| 18 | tts-api | 1000m | 4.0 GiB |
-| 19 | tts-grpc-gateway | 200m | 256.0 MiB |
-| 20 | tts-preproc | 4000m | 16.0 GiB |
-| 21 | tts-acronorm | 4000m | 8.0 GiB |
-| 22 | tts-embedding | 1000m | 4.0 GiB |
-| 23 | tts-gradtts | 8000m | 30.0 GiB |
-| 24 | media-ground | 4000m | 4.0 GiB |
-| 25 | media-receiver | 8000m | 4.0 GiB |
-| 26 | media-receiver-balancer | 2000m | 2.0 GiB |
-| 27 | media-archive-back | 500m | 512.0 MiB |
+| 14 | common-etcd | 500m | 1.0 GiB |
+| 15 | iam-admin-backend | 1000m | 2.0 GiB |
+| 16 | iam-admin-frontend | 250m | 256.0 MiB |
+| 17 | iam-pap | 500m | 512.0 MiB |
+| 18 | iam-pdp | 1000m | 256.0 MiB |
+| 19 | tts-api | 1000m | 4.0 GiB |
+| 20 | tts-grpc-gateway | 200m | 256.0 MiB |
+| 21 | tts-preproc | 4000m | 16.0 GiB |
+| 22 | tts-acronorm | 4000m | 8.0 GiB |
+| 23 | tts-embedding | 1000m | 4.0 GiB |
+| 24 | tts-gradtts | 8000m | 30.0 GiB |
+| 25 | media-ground | 4000m | 4.0 GiB |
+| 26 | media-receiver | 8000m | 4.0 GiB |
+| 27 | media-receiver-balancer | 2000m | 2.0 GiB |
+| 28 | media-archive-back | 500m | 512.0 MiB |
+
 
 Суммарные минимальные значения для CPU-узлов:
-- CPU: 53520m (53 CPU cores)
-- Память: 109 GiB
+- CPU: 54025m (54 CPU cores)
+- Память: 110 GiB
 
 На GPU-узлах будут развернуты следующие сервисы Audiogram:
 
@@ -123,8 +126,8 @@ Audiogram состоит из 5 модулей:
 - CPU: 40000m (40 CPU cores)
 - Память: 72 GiB
 Суммарные минимальные значения для CPU и GPU узлов
-- CPU: 93000m (93 CPU cores)
-- Память: 181.0 GiB
+- CPU: 94000m (94 CPU cores)
+- Память: 182.0 GiB
 
 На GPU-узлах должны быть установлены графические ускорители. Всего Audiogram требует наличие двух видеокарт NVIDIA A100 80GB.
 
@@ -132,6 +135,25 @@ Audiogram состоит из 5 модулей:
 Подробную информацию о том, как разделить видеокарту NVIDIA на MIG-профили, можно найти в [NVIDIA Multi-Instance GPU User Guide](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/index.html).
 
 Для корректной работы видеокарт необходимо установить GPU-драйверы с помощью NVIDIA GPU Operator. Более подробную информацию можно посмотреть на сайте NVIDIA [https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/index.html](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/index.html).
+
+### Настройка ETCD
+
+ETCD используется в качестве service-registry. При старте пода агент пишет свой адрес в etcd. asr-api и другие агенты читают этот etcd и видят текущие состояния запущенных сервисов. При удалении пода агент удаляет свой адрес.
+
+Сервисы Audiogram, которые используют service-registry:
+
+| **Название сервиса** | **Модуль Audiogram, к которому относится сервис** | 
+| ------ | ------- |
+| asr-api | asr | 
+| e2e-agent | asr | 
+| vad-agent | asr | 
+| longrunning-process | asr | 
+| genderage-agent | asr | 
+| antispoofing-agent | asr | 
+| tts-api | tts |
+| tts-agent | tts |
+
+> etcd раскатывается через helm-чарт. Дополнительной настройки не требуется.
 
 ###	Настройка Ingress Controller
 
