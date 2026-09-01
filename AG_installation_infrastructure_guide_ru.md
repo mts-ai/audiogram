@@ -138,22 +138,22 @@ Audiogram состоит из 5 модулей:
 
 ### Настройка ETCD
 
-ETCD используется в качестве service-registry. При старте пода агент пишет свой адрес в etcd. asr-api и другие агенты читают этот etcd и видят текущие состояния запущенных сервисов. При удалении пода агент удаляет свой адрес.
+ETCD используется в качестве service-registry. service-registry - service discovery для приложений tts-agent/asr-e2e-agent. 
 
 Сервисы Audiogram, которые используют service-registry:
 
-| **Название сервиса** | **Модуль Audiogram, к которому относится сервис** | 
-| ------ | ------- |
-| asr-api | asr | 
-| e2e-agent | asr | 
-| vad-agent | asr | 
-| longrunning-process | asr | 
-| genderage-agent | asr | 
-| antispoofing-agent | asr | 
-| tts-api | tts |
-| tts-agent | tts |
+| **Название сервиса** | **Модуль Audiogram, к которому относится сервис** | **Протокол** | **Описание** |
+| ------ | ------- |------- |------- |
+| asr-api | asr | grpc | Получение списка endpoints asr-e2e агентов.|
+| e2e-agent | asr | grpc | Регистрация агента и отправка keep-alive хардбитов. |
+| vad-agent | asr | grpc | Регистрация агента и отправка keep-alive хардбитов. |
+| longrunning-process | asr | grpc | Получение информации об инстансах требуемых агентов. |
+| genderage-agent | asr | grpc | Регистрация агента и отправка keep-alive хардбитов.|
+| antispoofing-agent | asr | grpc | Регистрация агента и отправка keep-alive хардбитов.|
+| tts-api | tts | grpc | Получение списка endpoints tts агентов. |
+| tts-agent | tts | Регистрация агента и отправка keep-alive хардбитов.|
 
-> etcd раскатывается через helm-чарт. Дополнительной настройки не требуется.
+ETCD раскатывается через helm-чарт. Дополнительной настройки не требуется.
 
 ###	Настройка Ingress Controller
 
