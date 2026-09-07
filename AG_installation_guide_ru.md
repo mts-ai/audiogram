@@ -431,9 +431,9 @@ Audiogram состоит из 5 модулей:
 | ------ | ------- | ----- | ----- |----- |
 | GRACEFUL_SHUTDOWN_PRESTOP_TIMEOUT_SEC | int | 290 | Да | Сколько секунд сервис должен ждать завершения активных запросов, прежде чем полностью завершить работу. |
 | TTS_AGENT_ADDRESS | str | None | Да | Собственный адрес сервиса. |
-| TS_AGENT_METRICS_PORT | int | None | Нет | Задает порт для предоставления Prometheus метрик. Если порт не задан,  метрики не предоставляются. |
-| TTS_LOAD_8 | bool | True | Нет | TTS load with a block size or alignment of 8. |
-| TTS_LOAD_22 | bool | True | Нет | TTS load with a block size or alignment of 22.  |
+| TTS_AGENT_METRICS_PORT | int | None | Нет | Задает порт для предоставления Prometheus метрик. Если порт не задан,  метрики не предоставляются. |
+| TTS_LOAD_8 | bool | True | Нет | Загрузка TTS с размером блока или выравниванием, равным 8. |
+| TTS_LOAD_22 | bool | True | Нет | Загрузка TTS с размером блока или выравниванием, равным 22.  |
 | REDIS_HOST | str | None | Да | Имя хоста Redis. |
 | REDIS_PORT | int | None | Да | Redis порт. |
 | REDIS_PASSWORD | str | None | Да | Redis пароль. |
@@ -534,8 +534,8 @@ Audiogram состоит из 5 модулей:
 | S3_ACCESS_KEY | str | None | Да | Ключ доступа в S3-хранилище. |
 | S3_SECRET_KEY | str | None | Да | Секретная строка для доступа в S3-хранилище. |
 | S3_BUCKET_PATTERN | str | None | Да | Задает паттерн для формирования имени S3 бакета, в который сервис будет записывать или читать данные. |
-| IO_EXTREMUM_ARCHIVE_AGGREGATION_ENCRYPTION | str | None | Да | Задает алгоритм шифрования данных на этапе агрегации и архивирования.  |
-| IO_EXTREMUM_ARCHIVE_DECRYPT_PASSWORD | str | None | Да | Задает пароль для расшифровки зашифрованных архивных файлов.  |
+| PDP_AUTHORIZATION_HOST | str | None | Да | Задает имя хоста для авторизации в PDP.  |
+| PDP_AUTHORIZATION_PORT | int | None | Да | Задает  номер порта для авторизации в PDP.  |
 
 
 ### receiver
