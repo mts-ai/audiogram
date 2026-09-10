@@ -227,13 +227,16 @@ Audiogram состоит из 5 модулей:
 | API_PDP_PROVIDER_HOST | str | None | Да | Имя хоста для подключения к auth-pdp-provider. |
 | API_PDP_PROVIDER_PORT | int | None | Да | Номер порта для подключения к auth-pdp-provider. |
 | API_EXTREMUM_ADDRESS | str | None | Да | Адрес для подключения к сервису Extremum. |
-| API_ENABLE_TTS_CONFIG | bool | True | Нет | Управляет опцией предоставления публичного API для синтеза с передачей конфигурации в запросе. |
-| API_ENABLE_STT_PRESETS | bool | True | Нет | Управляет опцией предоставления публичного API  для распознавания с использованием пресетов. |
-| API_ENABLE_TTS_PRESETS | bool | True | Нет | Управляет опцией предоставления публичного API для синтеза с использованием пресетов. |
-| API_ENABLE_LR_PRESETS | bool | True | Нет | Управляет опцией предоставления публичного API для отложенного распознавания с использованием пресетов. |
-| API_PROBE_READINESS_CHECK_TTS_AGENT_CONNECTIVITY | bool | True | Нет | Включает/выключает readiness-проверку с сервисом tts-agent. |
-| API_PROBE_READINESS_CHECK_EMBEDDING_SERVICE_CONNECTIVITY | bool | True | Нет | Включает/выключает readiness-проверку с сервисом embeddings-service. |
-| API_PROBE_READINESS_CHECK_AUDIO_RECORDER_CONNECTIVITY | bool | True | Нет | Включает/выключает readiness-проверку с сервисом audio-recorder. |
+| API_ENABLE_TTS_CONFIG | bool | False | Нет | Управляет опцией предоставления публичного API для синтеза с передачей конфигурации в запросе. |
+| API_ENABLE_STT_CONFIG | bool | False | Нет | Управляет опцией предоставления публичного API для распознавания речи с передачей конфигурации в запросе. |
+| API_ENABLE_STT_PRESETS | bool | False | Нет | Управляет опцией предоставления публичного API  для распознавания речи с использованием пресетов. |
+| API_ENABLE_TTS_PRESETS | bool | False | Нет | Управляет опцией предоставления публичного API для синтеза с использованием пресетов. |
+| API_ENABLE_LR_PRESETS | bool | False | Нет | Управляет опцией предоставления публичного API для отложенного распознавания с использованием пресетов. |
+| API_PROBE_READINESS_CHECK_TTS_AGENT_CONNECTIVITY | bool | False | Нет | Включает/выключает readiness-проверку с сервисом tts-agent. |
+| API_PROBE_READINESS_CHECK_ASR_AGENT_CONNECTIVITY | bool | False | Нет | Включает/выключает readiness-проверку с сервисом asr-agent. |
+| API_PROBE_READINESS_CHECK_EMBEDDING_SERVICE_CONNECTIVITY | bool | False| Нет | Включает/выключает readiness-проверку с сервисом embeddings-service. |
+| API_PROBE_READINESS_CHECK_AUDIO_RECORDER_CONNECTIVITY | bool | False | Нет | Включает/выключает readiness-проверку с сервисом audio-recorder. |
+| API_PROBE_READINESS_CHECK_LONG_RUNNING_MNG_CONNECTIVITY | bool | False | Нет | Включает/выключает readiness-проверку с сервисом long-running. |
 | API_SESSION_ID_LEN | int | 0 | Нет | Задает ограничение на длину значения session_id. |
 | API_LONGRUNNING_MNG_ADDRESS | str | None | Да | Адрес сервиса longrunning-mng. |
 | API_STATISTICS_ADDRESS | str | None | Да | URL сервера статистики без схемы, в формате address:port. |
@@ -246,6 +249,7 @@ Audiogram состоит из 5 модулей:
 | REPLICA_ID | str | None | Да | Service instance ID. |
 | API_RATE_LIMITER_QUOTA_SYNC_SEC | int | 60 | Нет | Временной интервал в секундах между обращениями к сервису rate-limiter за получением квот. |
 | API_SERVICE_REGISTRY_REGISTER_EP | str | None | Да | Адрес обратной связи, который будет зарегистрирован в Service registry. |
+| API_TTS_EMBEDDING_SERVICE_ADDRESS | str | None | Да | Адрес TTS Embedding сервиса. |
 
 
 ###	grpc-gateway
@@ -356,11 +360,11 @@ Audiogram состоит из 5 модулей:
 | ASR_LRW_ARCHIVE_HOST | str | None   | Да | Хост S3-хранилища. |
 | ASR_LRW_ARCHIVE_PORT | int | None   | Да | Порт S3-хранилища. |
 | ASR_LRW_OTLP_COLLECTOR_ADDRESS | str | None   | Да | Адрес сервиса сбора данных трассировки (коллектор), например otlp-collector:4317. Если не задан, трассировка сервиса будет выключена. |
-| ASR_LRW_VAD_MAX_RTFX | int | None   | Да | Задает максимально-допустимое соотношение RTF (показателя скорости обработки) сервиса VAD. |
-| ASR_LRW_ASR_E2E_MAX_RTFX | int | None   | Да | Задает максимально-допустимое соотношение RTF (показателя скорости обработки) сервиса E2E. |
-| ASR_LRW_ARCHIVE_MAX_RTFX | int | None   | Да | Задает максимально-допустимое соотношение RTF (показателя скорости обработки) для архива. |
-| ASR_LRW_TRANSCODER_MAX_RTFX | int | None   | Да | Задает максимально-допустимое соотношение RTF (показателя скорости обработки) для сервиса транскодирования аудио.|
-| ASR_LRW_THREAD_COUNT | int | None   | Да | Задает количество рабочих потоков (threads), который сервис будет использовать для параллельной обработки задач. |
+| ASR_LRW_VAD_MAX_RTFX | int | 400   | Да | Задает максимально-допустимое соотношение RTF (показателя скорости обработки) сервиса VAD. |
+| ASR_LRW_ASR_E2E_MAX_RTFX | int | 400   | Да | Задает максимально-допустимое соотношение RTF (показателя скорости обработки) сервиса E2E. |
+| ASR_LRW_ARCHIVE_MAX_RTFX | int | 800   | Да | Задает максимально-допустимое соотношение RTF (показателя скорости обработки) для архива. |
+| ASR_LRW_TRANSCODER_MAX_RTFX | int | 1600   | Да | Задает максимально-допустимое соотношение RTF (показателя скорости обработки) для сервиса транскодирования аудио.|
+| ASR_LRW_THREAD_COUNT | int | 4   | Да | Задает количество рабочих потоков (threads), который сервис будет использовать для параллельной обработки задач. |
 
 
 ###	vad
@@ -475,7 +479,7 @@ Audiogram состоит из 5 модулей:
 | POSTGRES_PASSWORD | str | None | Да | Пароль пользователя PostgreSQL. |
 | POSTGRES_DB | str | None | Да | Имя базы данных PostgreSQL. |
 | DATABASE_URL | str | None | Да | URL базы данных PostgreSQL. |
-
+| DEVICE | str | None | Да | Режим запуска DEVICE=gpu/cpu, default = gpu |
 
 ##	Модуль common
 
@@ -530,12 +534,16 @@ Audiogram состоит из 5 модулей:
 | REDIS_PASSWORD | str | None | Да | Redis пароль. |
 | REDIS_DB | str | None | Да | Имя базы данных Redis. |
 | REDIS_URI | str | None | Да | Redis URI. |
-| S3_ENDPOINT | str | None | Да | Endpoint S3-хранилища. |
-| S3_ACCESS_KEY | str | None | Да | Ключ доступа в S3-хранилище. |
-| S3_SECRET_KEY | str | None | Да | Секретная строка для доступа в S3-хранилище. |
-| S3_BUCKET_PATTERN | str | None | Да | Задает паттерн для формирования имени S3 бакета, в который сервис будет записывать или читать данные. |
+| S3_ENDPOINT | str | http://common-minio:9000 | Да | Endpoint S3-хранилища. |
+| S3_ACCESS_KEY | str | <значение из секрета audiogram-common-s3/root-user> | Да | Ключ доступа в S3-хранилище. |
+| S3_SECRET_KEY | str | <значение из секрета audiogram-common-s3/root-password> | Да | Секретная строка для доступа в S3-хранилище. |
+| S3_UNSAFE | bool | True | Да | Включает/отключает стандартную проверку безопасности при подключении к S3-хранилищу данных. |
+| S3_BUCKET_PATTERN | str | {event} | Да | Задает паттерн для формирования имени S3 бакета, в который сервис будет записывать или читать данные. |
 | PDP_AUTHORIZATION_HOST | str | None | Да | Задает имя хоста для авторизации в PDP.  |
 | PDP_AUTHORIZATION_PORT | int | None | Да | Задает  номер порта для авторизации в PDP.  |
+| IO_EXTREMUM_ARCHIVE_AGGREGATION_ENABLED | bool | True | Да | Включает/отключает агрегацию пиковых значений ввода-вывода в архивных хранилищах.  |
+| IO_EXTREMUM_ARCHIVE_AGGREGATION_ENCRYPTION | str | chacha20 | Да | Определяет, должны ли сводные данные в архиве защищаться шифрованием.  |
+| IO_EXTREMUM_ARCHIVE_DECRYPT_PASSWORD | str | <значение из секрета audiogram-media-encryption/encrypt-password> | Да | Позволяет автоматически распаковывать или читать защищенные архивы без ручного ввода пароля.  |
 
 
 ### receiver
@@ -551,8 +559,10 @@ Audiogram состоит из 5 модулей:
 | S3_ACCESS_KEY | str | None | Да | Ключ доступа в S3-хранилище. |
 | S3_SECRET_KEY | str | None | Да | Секретная строка для доступа в S3-хранилище. |
 | S3_BUCKET_PATTERN | str | None | Да | Задает паттерн для формирования имени S3 бакета, в который сервис будет записывать или читать данные. |
-| IO_EXTREMUM_RECEIVER_S3_CREATE-BUCKET-IF-NOT-EXIST | bool| None | Да | Создать бакет, если он не существует. |
-
+| IO_EXTREMUM_RECEIVER_S3_CREATE-BUCKET-IF-NOT-EXIST | bool| True | Да | Задает создать бакет, если он не существует. |
+| IO_EXTREMUM_RECEIVER_GRPC_ENCRYPT_ALGHORITHM | str| None | Да | Задает криптографический алгоритм (например, ChaCha20) для защиты gRPC-соединений и передаваемых между микросервисами данных. |
+| IO_EXTREMUM_RECEIVER_GRPC_ENCRYPT_PASSWORD | str | None | Да | Задает пароль для шифрования, аутентификации или защиты gRPC-соединений между микросервисами. |
+| IO_EXTREMUM_RECEIVER_GRPC_ENCRYPT | bool | True | Да | Включает/отключает шифрование трафика для gRPC-соединений между микросервисами. |
 
 ###	receiver-balancer
 
