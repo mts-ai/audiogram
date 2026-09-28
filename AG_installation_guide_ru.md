@@ -537,13 +537,11 @@ Audiogram состоит из 5 модулей:
 | S3_ENDPOINT | str | http://common-minio:9000 | Да | Endpoint S3-хранилища. |
 | S3_ACCESS_KEY | str | <значение из секрета audiogram-common-s3/root-user> | Да | Ключ доступа в S3-хранилище. |
 | S3_SECRET_KEY | str | <значение из секрета audiogram-common-s3/root-password> | Да | Секретная строка для доступа в S3-хранилище. |
-| S3_UNSAFE | bool | True | Да | Включает/отключает стандартную проверку безопасности при подключении к S3-хранилищу данных. |
 | S3_BUCKET_PATTERN | str | {event} | Да | Задает паттерн для формирования имени S3 бакета, в который сервис будет записывать или читать данные. |
 | PDP_AUTHORIZATION_HOST | str | None | Да | Задает имя хоста для авторизации в PDP.  |
 | PDP_AUTHORIZATION_PORT | int | None | Да | Задает  номер порта для авторизации в PDP.  |
 | IO_EXTREMUM_ARCHIVE_AGGREGATION_ENABLED | bool | True | Да | Включает/отключает агрегацию пиковых значений ввода-вывода в архивных хранилищах.  |
-| IO_EXTREMUM_ARCHIVE_AGGREGATION_ENCRYPTION | str | chacha20 | Да | Определяет, должны ли сводные данные в архиве защищаться шифрованием.  |
-| IO_EXTREMUM_ARCHIVE_DECRYPT_PASSWORD | str | <значение из секрета audiogram-media-encryption/encrypt-password> | Да | Позволяет автоматически распаковывать или читать защищенные архивы без ручного ввода пароля.  |
+
 
 
 ### receiver
@@ -560,9 +558,7 @@ Audiogram состоит из 5 модулей:
 | S3_SECRET_KEY | str | None | Да | Секретная строка для доступа в S3-хранилище. |
 | S3_BUCKET_PATTERN | str | None | Да | Задает паттерн для формирования имени S3 бакета, в который сервис будет записывать или читать данные. |
 | IO_EXTREMUM_RECEIVER_S3_CREATE-BUCKET-IF-NOT-EXIST | bool| True | Да | Задает создать бакет, если он не существует. |
-| IO_EXTREMUM_RECEIVER_GRPC_ENCRYPT_ALGHORITHM | str| None | Да | Задает криптографический алгоритм (например, ChaCha20) для защиты gRPC-соединений и передаваемых между микросервисами данных. |
-| IO_EXTREMUM_RECEIVER_GRPC_ENCRYPT_PASSWORD | str | None | Да | Задает пароль для шифрования, аутентификации или защиты gRPC-соединений между микросервисами. |
-| IO_EXTREMUM_RECEIVER_GRPC_ENCRYPT | bool | True | Да | Включает/отключает шифрование трафика для gRPC-соединений между микросервисами. |
+| IO_EXTREMUM_RECEIVER_EXPIRE-TIME | str | 10 с | Нет | Таймаут, по истечении которого в стрим уходит ABORT независимо от того, записаны данные или нет. |
 
 ###	receiver-balancer
 
@@ -579,7 +575,7 @@ Audiogram состоит из 5 модулей:
 | S3_HOST_1 | str | None | Да | Hostname S3-хранилища. |
 | S3_NAME_1 | str | None | Да | Имя S3-хранилища. |
 | S3_ACCESS_KEY_1 | str | None | Да | Ключ доступа к S3-хранилищу. |
-| S3_SECRET_KEY_1| str | None | Да | Секретная строка доступа к S3-хранилищу. |
+| S3_SECRET_KEY_1 | str | None | Да | Секретная строка доступа к S3-хранилищу. |
 
 ## Модуль iam
 
