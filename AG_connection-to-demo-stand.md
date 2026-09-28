@@ -14,48 +14,90 @@
 
 ## Шаг 1. Подготовьте окружение
 
-1. Откройте Терминал (или cmd в Windows).
-2. Установите любую версию Python 3.11. Например, 3.11.6
-   >  ВНИМАНИЕ:  C более поздними версиями Python возможны ошибки при установке зависимостей.
+1. Откройте Терминал (в Windows — cmd или PowerShell).
+2. Установите любую версию Python 3.11. Например, 3.11.6.
+   >  ВНИМАНИЕ: C более новыми версиями Python возможны ошибки при установке зависимостей.
 
 3. Проверьте установленную версию Python и убедитесь, что у вас стоит Python 3.11.
-
-    ``` windows 
-    $ python --version
+    Windows:
     ```
-4. Перейдите в папку с демо-клиентом и откройте файл **FAG_config.ini** в текстовом редакторе и сделайте следующие изменения:
-    1) Найдите секцию **# Keycloak authentication credentials (ID and secret)**.
-    2) Введите свои значения в параметрах **client_id** и **client_secret**. Их можно получить по запросу у DevOps Audiogram.
-5. В Терминале (или cmd в Windows), перейдите в директорию, в которой вы распаковали архив и создайте Python virtual environment (venv):
-      ``` windows 
-      $ python -m venv .venv
-      ```
+    python --version
+    ```
+    macOS / Linux:
+    ```
+    python3 --version
+    ```
+4. Перейдите в директорию, в которую вы распаковали архив с демо-клиентом. 
+5. Создайте Python virtual environment (venv):
+    Windows
+    ``` 
+    python -m venv .venv
+    ```
+    macOS / Linux:
+    ```
+    python3 -m venv .venv
+    ```
 6. Активируйте venv:
-      ``` windows 
-      $ .\.venv\Scripts\activate
-      ```
+    Windows:
+    ```
+    .\.venv\Scripts\activate
+    ```
+    macOS / Linux:
+    ```
+    source ./.venv/bin/activate
+    ```
 7. Установите зависимости:
-      ``` windows 
-      $ pip install -r requirements.txt
-      $ pip install -r requirements.audio_archive.txt
-      ```
+    ```  
+    pip install -r requirements.txt
+    pip install -r requirements.audio_archive.txt
+    ```    
+ 
+## Шаг 2. Создайте и заполните конфигурационный файл
 
-## Шаг 2. Запустите приложение
+Демо-клиент не содержит готового конфигурационного файла. Чтобы использовать демо-клиент, создайте файл конфигурации. 
+
+1. Сгенерируйте файл конфигурации (имя файла произвольное, далее в примерах используется `FAG_config.ini`):
+   ```
+   python -m clients.main create-config FAG_config.ini
+   ```
+2.  Откройте **FAG_config.ini** в текстовом редакторе и внесите следующие изменения:
+
+   1) В секции **# gRPC API host and port** укажите адрес демо-стенда:
+      ```
+      api_address = "grpc.audiogram-demo.mts.ai:443"
+      ```
+   2) В секции **# Connect to gRPC API using SSL/TLS or not** оставьте параметр `use_ssl = true` без изменений — он уже выставлен по умолчанию.
+
+   3) В секции **# Keycloak authentication credentials (ID and secret)** впишите свои значения `client_id` и `client_secret`. Их можно получить по запросу у DevOps Audiogram.
+
+   4) В секции **# Keycloak root URL** укажите:
+      ```
+      sso_url = "https://sso.dev.mts.ai/"     
+      ```
+   5)  В секции **# Keycloak realm** задайте:   
+       ```
+       realm = "audiogram-demo"
+       ```
+
+ > Убедитесь, что корректно заполнены поля `api_address`, `sso_url` и `realm`. В противном случае команды ниже завершатся с ошибкой валидации конфигурации. 
+
+
+## Шаг 3. Запустите приложение
 
 Вы можете получить краткую информацию о приложении, выполнив следующую команду:
 
-``` windows 
-$ python -m clients.main --help
+```
+python -m clients.main --help
 ```
 
 Вы также можете посмотреть детальную документацию по командам в директории ./docs/.
 
 # Пример 1 - Файловое распознaвание голоса
 
-1. Проверьте, что вы находитесь в virtual environment в директории, где вы производили установку и выполните следующую команду:
+1. Проверьте, что вы находитесь в virtual environment в директории, где вы производили установку и выполните следующую команду, указав путь к аудио файлу в wav формате:
 
       ``` windows 
-      $ python -m clients.main recognize file --audio-file {path/to/file.wav} --config FAG_config.ini
+      python -m clients.main recognize file --audio-file {path/to/file.wav} --config FAG_config.ini
       ```
 2. Команда выведет результат на экран.
 
@@ -96,11 +138,11 @@ $ python -m clients.main --help
 
 В данном примере добавлены параметры для распознавания пола, возраста и эмоции говорящего, а так же определения спуфинг-атаки.
 
-1. Проверьте, что вы находитесь в virtual environment в директории, где вы производили установку и выполните следующую команду:
+1. Проверьте, что вы находитесь в virtual environment в директории, где вы производили установку и выполните следующую команду, указав путь к аудио файлу в wav формате:
 
 
    ``` windows 
-    $ python -m clients.main recognize file --audio-file {path/to/file.wav} --config FAG_config.ini --enable-genderage --enable-antispoofing
+    python -m clients.main recognize file --audio-file {path/to/file.wav} --config FAG_config.ini --enable-genderage --enable-antispoofing
    ```
 2. Команда выведет результат на экран.   
 
@@ -171,7 +213,9 @@ $ python -m clients.main --help
 
 2. Укажите Bearer Token. Например, в Postman. Создайте grps запрос. Перейдите на вкладку **Metadata**. В поле **key** ввeдите "authorization", а в поле **Value** -  "Bearer <access token>". 
 
-   Также задайте  "x-ai-account" для **key** и "demo" для **value**.
+   Также задайте обязательные заголовки:
+    - "x-ai-account" для **key** и "demo" для **value**;
+    - "x-ai-workspace" для **key** и "default" для **value**.
 
 3. Выполните запроc. Например: TTS/GetModelsInfo 
 
