@@ -62,22 +62,22 @@
    ```
 2.  Откройте **FAG_config.ini** в текстовом редакторе и внесите следующие изменения:
 
-   1) В секции **# gRPC API host and port** укажите адрес демо-стенда:
-      ```
-      api_address = "grpc.audiogram-demo.mts.ai:443"
-      ```
-   2) В секции **# Connect to gRPC API using SSL/TLS or not** оставьте параметр `use_ssl = true` без изменений — он уже выставлен по умолчанию.
+     1) В секции **# gRPC API host and port** укажите адрес демо-стенда:
+        ```
+        api_address = "grpc.audiogram-demo.mts.ai:443"
+        ```
+     2) В секции **# Connect to gRPC API using SSL/TLS or not** оставьте параметр `use_ssl = true` без изменений — он уже выставлен по умолчанию.
 
-   3) В секции **# Keycloak authentication credentials (ID and secret)** впишите свои значения `client_id` и `client_secret`. Их можно получить по запросу у DevOps Audiogram.
+     3) В секции **# Keycloak authentication credentials (ID and secret)** впишите свои значения `client_id` и `client_secret`. Их можно получить по запросу у DevOps Audiogram.
 
-   4) В секции **# Keycloak root URL** укажите:
-      ```
-      sso_url = "https://sso.dev.mts.ai/"     
-      ```
-   5)  В секции **# Keycloak realm** задайте:   
-       ```
-       realm = "audiogram-demo"
-       ```
+     4) В секции **# Keycloak root URL** укажите:
+        ```
+        sso_url = "https://sso.dev.mts.ai/"     
+        ```
+     5) В секции **# Keycloak realm** задайте:   
+        ```
+        realm = "audiogram-demo"
+        ```
 
  > Убедитесь, что корректно заполнены поля `api_address`, `sso_url` и `realm`. В противном случае команды ниже завершатся с ошибкой валидации конфигурации. 
 
@@ -94,7 +94,7 @@ python -m clients.main --help
 
 # Пример 1 - Файловое распознaвание голоса
 
-1. Проверьте, что вы находитесь в virtual environment в директории, где вы производили установку и выполните следующую команду, указав путь к аудио файлу в wav формате:
+1. Проверьте, что вы находитесь в virtual environment в директории, где вы производили установку и выполните следующую команду, указав путь к аудио файлу в .wav формате:
 
       ``` windows 
       python -m clients.main recognize file --audio-file {path/to/file.wav} --config FAG_config.ini
@@ -138,7 +138,7 @@ python -m clients.main --help
 
 В данном примере добавлены параметры для распознавания пола, возраста и эмоции говорящего, а так же определения спуфинг-атаки.
 
-1. Проверьте, что вы находитесь в virtual environment в директории, где вы производили установку и выполните следующую команду, указав путь к аудио файлу в wav формате:
+1. Проверьте, что вы находитесь в virtual environment в директории, где вы производили установку и выполните следующую команду, указав путь к аудио файлу в .wav формате:
 
 
    ``` windows 
