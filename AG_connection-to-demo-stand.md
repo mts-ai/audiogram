@@ -70,16 +70,21 @@
 
      3) В секции **# Keycloak authentication credentials (ID and secret)** впишите свои значения `client_id` и `client_secret`. Их можно получить по запросу у DevOps Audiogram.
 
-     4) В секции **# Keycloak root URL** укажите:
+     4) В секции  **# IAM additional credentials** задайте  `iam_account` и `iam_workspace`:
+        ```
+        iam_account = "demo"
+        iam_workspace = "default"     
+        ```
+     5) В секции **# Keycloak root URL** укажите:
         ```
         sso_url = "https://sso.dev.mts.ai/"     
         ```
-     5) В секции **# Keycloak realm** задайте:   
+     6) В секции **# Keycloak realm** задайте:   
         ```
         realm = "audiogram-demo"
         ```
 
- > Убедитесь, что корректно заполнены поля `api_address`, `sso_url`, `realm`, `client_id` и `client_secret`. В противном случае, команды ниже завершатся с ошибкой валидации конфигурации. 
+ > Убедитесь, что корректно заполнены поля `api_address`, `sso_url`, `realm`, `client_id`, `client_secret`,  `iam_account` и `iam_workspace`. В противном случае, команды ниже завершатся с ошибкой валидации конфигурации. 
 
 
 ## Шаг 3. Запустите приложение
