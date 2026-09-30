@@ -70,10 +70,9 @@
 
      3) В секции **# Keycloak authentication credentials (ID and secret)** впишите свои значения `client_id` и `client_secret`. Их можно получить по запросу у DevOps Audiogram.
 
-     4) В секции  **# IAM additional credentials** задайте  `iam_account` и `iam_workspace`:
+     4) В секции  **# IAM additional credentials** задайте  `iam_account`:
         ```
-        iam_account = "demo"
-        iam_workspace = "default"     
+        iam_account = "demo"            
         ```
      5) В секции **# Keycloak root URL** укажите:
         ```
@@ -84,8 +83,9 @@
         realm = "audiogram-demo"
         ```
 
- > Убедитесь, что корректно заполнены поля `api_address`, `sso_url`, `realm`, `client_id`, `client_secret`,  `iam_account` и `iam_workspace`. В противном случае, команды ниже завершатся с ошибкой валидации конфигурации. 
+ > Убедитесь, что корректно заполнены поля `api_address`, `sso_url`, `realm`, `client_id`, `client_secret` и  `iam_account`. В противном случае, команды ниже завершатся с ошибкой валидации конфигурации. 
 
+3. Сохраните изменения в **FAG_config.ini**.
 
 ## Шаг 3. Запустите приложение
 
