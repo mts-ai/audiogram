@@ -82,8 +82,8 @@ Audiogram состоит из 5 модулей:
 | 5 | asr-lr-process | 1500m | 2.0 GiB |
 | 6 | asr-antispoofing | 2000m | 4.0 GiB |
 | 7 | asr-genderage | 2000m | 8.0 GiB |
-| 8 | common-api | 0 | 0 |
-| 9 | common-grpc-gateway | 0 | 0 |
+| 8 | common-api | 0 (ресурсов не потребляют) | 0 (ресурсов не потребляют) |
+| 9 | common-grpc-gateway | 0 (ресурсов не потребляют) | 0 (ресурсов не потребляют) |
 | 10 | common-audio-transcoder | 1000m | 4.0 GiB |
 | 11 | common-sizing-calculator | 125m | 128.0 MiB |
 | 12 | common-bi-migrations | 500m | 512.0 MiB |
