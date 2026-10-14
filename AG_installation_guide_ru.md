@@ -154,8 +154,8 @@ Audiogram состоит из 5 модулей:
 | 5 | asr-lr-process | 1500m | 2.0 GiB |
 | 6 | asr-antispoofing | 2000m | 4.0 GiB |
 | 7 | asr-genderage | 2000m | 8.0 GiB |
-| 8 | common-api | 0 | 0 |
-| 9 | common-grpc-gateway | 0 | 0 |
+| 8 | common-api | 0 (ресурсов не потребляют) | 0 (ресурсов не потребляют)  |
+| 9 | common-grpc-gateway | 0 (ресурсов не потребляют) | 0 (ресурсов не потребляют) |
 | 10 | common-audio-transcoder | 1000m | 4.0 GiB |
 | 11 | common-sizing-calculator | 125m | 128.0 MiB |
 | 12 | common-bi-migrations | 500m | 512.0 MiB |
@@ -249,6 +249,8 @@ Audiogram состоит из 5 модулей:
 | REPLICA_ID | str | None | Да | Service instance ID. |
 | API_RATE_LIMITER_QUOTA_SYNC_SEC | int | 60 | Нет | Временной интервал в секундах между обращениями к сервису rate-limiter за получением квот. |
 | API_SERVICE_REGISTRY_REGISTER_EP | str | None | Да | Адрес обратной связи, который будет зарегистрирован в Service registry. |
+| API_SERVICE_REGISTRY_ASR_E2E_STREAM_AGENT_GROUP_NAME | str | agent/asr-e2e/ | Нет | Задает имя группы потребителей (Consumer Group Name) для агента потоковой обработки речи в системах ASR (Automatic Speech Recognition) при проведении сквозного (End-to-End, E2E) тестирования или мониторинга. |
+|  API_SERVICE_REGISTRY_ASR_E2E_FILE_AGENT_GROUP_NAME | str | agent/asr-e2e/ | Нет | Задает имя группы потребителей (Consumer Group Name) для агента файловой обработки аудио (File Agent) в сервисе распознавания речи (ASR) при проведении сквозного (E2E) тестирования. |
 | API_TTS_EMBEDDING_SERVICE_ADDRESS | str | None | Да | Адрес TTS Embedding сервиса. |
 
 
@@ -537,12 +539,13 @@ Audiogram состоит из 5 модулей:
 | S3_ENDPOINT | str | http://common-minio:9000 | Да | Endpoint S3-хранилища. |
 | S3_ACCESS_KEY | str | <значение из секрета audiogram-common-s3/root-user> | Да | Ключ доступа в S3-хранилище. |
 | S3_SECRET_KEY | str | <значение из секрета audiogram-common-s3/root-password> | Да | Секретная строка для доступа в S3-хранилище. |
+| S3_UNSAFE | bool | true | Да | Включает упрощенный (небезопасный) режим работы с S3-совместимым хранилищем, отключая проверки безопасности SSL/TLS и сертификатов.|
 | S3_BUCKET_PATTERN | str | {event} | Да | Задает паттерн для формирования имени S3 бакета, в который сервис будет записывать или читать данные. |
 | PDP_AUTHORIZATION_HOST | str | None | Да | Задает имя хоста для авторизации в PDP.  |
 | PDP_AUTHORIZATION_PORT | int | None | Да | Задает  номер порта для авторизации в PDP.  |
 | IO_EXTREMUM_ARCHIVE_AGGREGATION_ENABLED | bool | True | Да | Включает/отключает агрегацию пиковых значений ввода-вывода в архивных хранилищах.  |
-
-
+| IO_EXTREMUM_ARCHIVE_AGGREGATION_ENCRYPTION | str | chacha20 | Нет | Отвечает за выбор алгоритма шифрования для сжатых и сгруппированных архивных данных (агрегатов) в модуле хранения/анализа экстремумов/метрик IO_EXTREMUM.  |
+| IO_EXTREMUM_ARCHIVE_DECRYPT_PASSWORD | str | <значение из секрета audiogram-media-encryption/encrypt-password> | Нет | Задает пароль или секретный ключ для расшифровки сжатых архивных данных в модуле IO_EXTREMUM при их чтении или распаковке.  |
 
 ### receiver
 
@@ -558,7 +561,9 @@ Audiogram состоит из 5 модулей:
 | S3_SECRET_KEY | str | None | Да | Секретная строка для доступа в S3-хранилище. |
 | S3_BUCKET_PATTERN | str | None | Да | Задает паттерн для формирования имени S3 бакета, в который сервис будет записывать или читать данные. |
 | IO_EXTREMUM_RECEIVER_S3_CREATE-BUCKET-IF-NOT-EXIST | bool| True | Да | Задает создать бакет, если он не существует. |
-| IO_EXTREMUM_RECEIVER_EXPIRE-TIME | str | 10 с | Нет | Таймаут, по истечении которого в стрим уходит ABORT независимо от того, записаны данные или нет. |
+| IO_EXTREMUM_RECEIVER_GRPC_ENCRYPT_ALGORITHM | str| CHACHA20 | Нет | Задает алгоритм шифрования для защищенной передачи данных по gRPC-каналу на приемнике (Receiver) модуля IO_EXTREMUM. |
+| IO_EXTREMUM_RECEIVER_GRPC_ENCRYPT_PASSWORD | str| <значение из секрета audiogram-media-encryption/encrypt-password> | Да | Задает пароль, который используется для шифрования и расшифровки данных, передаваемых по gRPC-каналу на приемник (Receiver) модуля IO_EXTREMUM. |
+| IO_EXTREMUM_RECEIVER_GRPC_ENCRYPT | bool| true | Нет | Отвечает за включение или выключение режима шифрования для входящего gRPC-трафика на приемнике (Receiver) модуля IO_EXTREMUM. |
 
 ###	receiver-balancer
 
