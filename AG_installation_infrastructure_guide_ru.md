@@ -79,7 +79,7 @@ Audiogram состоит из 5 модулей:
 | 2 | asr-grpc-gateway | 200m | 256.0 MiB |
 | 3 | asr-e2e-mic | 8000m | 8.0 GiB |
 | 4 | asr-lr-mng | 1500m | 2.0 GiB |
-| 5 | asr-lr-process | 1500m | 2.0 GiB |
+| 5 | longrunning-asr-worker | 1500m | 2.0 GiB |
 | 6 | asr-antispoofing | 2000m | 4.0 GiB |
 | 7 | asr-genderage | 2000m | 8.0 GiB |
 | 8 | common-api | 0 (ресурсов не потребляет) | 0 (ресурсов не потребляет) |
@@ -100,7 +100,7 @@ Audiogram состоит из 5 модулей:
 | 23 | tts-embedding | 2000m | 4.0 GiB |
 | 24 | tts-gradtts | 5000m | 8.0 GiB |
 | 25 | media-ground | 4000m | 4.0 GiB |
-| 26 | media-receiver | 8000m | 4.0 GiB |
+| 26 | media-grpc-receiver | 8000m | 4.0 GiB |
 | 27 | media-receiver-balancer | 2000m | 2.0 GiB |
 | 28 | media-archive-back | 500m | 512.0 MiB |
 
@@ -147,7 +147,7 @@ ETCD используется в качестве service-registry. service-regi
 | asr-api | asr | grpc | Получение списка endpoints asr-e2e агентов.|
 | e2e-agent | asr | grpc | Регистрация агента и отправка keep-alive хардбитов. |
 | vad-agent | asr | grpc | Регистрация агента и отправка keep-alive хардбитов. |
-| longrunning-process | asr | grpc | Получение информации об инстансах требуемых агентов. |
+| longrunning-asr-worker  | asr | grpc | Получение информации об инстансах требуемых агентов. |
 | genderage-agent | asr | grpc | Регистрация агента и отправка keep-alive хардбитов.|
 | antispoofing-agent | asr | grpc | Регистрация агента и отправка keep-alive хардбитов.|
 | tts-api | tts | grpc | Получение списка endpoints tts агентов. |
